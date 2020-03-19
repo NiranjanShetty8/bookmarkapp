@@ -14,7 +14,7 @@ type CategoryService struct {
 
 func (cs *CategoryService) GetAllCategories(uid uuid.UUID, categories []*model.Category) error {
 	uow := repository.NewUnitOfWork(cs.DB, true)
-	err := cs.Repository.GetAll(uow, uid, categories, []string{})
+	err := cs.Repository.GetAll(uow, uid, categories, []string{"Categories", "Bookmarks"})
 	return err
 }
 

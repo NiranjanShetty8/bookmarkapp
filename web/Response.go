@@ -1,0 +1,41 @@
+package web
+
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+func writeToHeader(w *http.ResponseWriter, statusCode int, payload interface{}) {
+	(*w).WriteHeader(statusCode)
+	(*w).Write(payload.([]byte))
+}
+
+//Set response with status code
+func RespondJSON(w *http.ResponseWriter, statusCode int, content interface{}) {
+	fmt.Println(content)
+	response, err := json.Marshal(content)
+	if err != nil {
+		writeToHeader(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	(*w).Header().Set("Content-Type", "application/json")
+	writeToHeader(w, statusCode, response)
+}
+
+//RespondErrorMessage Writes Error to Respond Writer
+func RespondErrorMessage(w *http.ResponseWriter, code int, message string) {
+	RespondJSON(w, code, message)
+}
+
+func RespondError(w *http.ResponseWriter, err error) {
+	switch err.(type) {
+	case ValidationError:
+		RespondJSON(w, http.StatusBadRequest, err)
+	case HTTPError:
+		httpError := err.(HTTPError)
+		RespondErrorMessage(w, httpError.HTTPStatus, httpError.ErrorKey)
+	default:
+		RespondErrorMessage(w, http.StatusInternalServerError, err.Error())
+	}
+}

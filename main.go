@@ -40,8 +40,14 @@ func main() {
 			}}}
 	us.Register(&user)
 	fmt.Println("main", user.ID)
-	fmt.Println(cs, bms)
+	fmt.Println("this", cs, bms)
 	fmt.Println(user)
+	checkUser := &model.User{
+		Username: "Niranjan",
+		Password: "12345678",
+	}
+	eror := us.Login(checkUser)
+	fmt.Println(eror)
 	// bookmark := model.Bookmark{
 	// 	Description: "facebook",
 	// 	URL: "www.facebook.com" ,

@@ -20,6 +20,7 @@ func (bmc *BookmarkController) RegisterRoutes(router *mux.Router) {
 	// subRouter.Use(bmc.Auth)
 }
 
+//To be removed soon
 func (bmc *BookmarkController) AuthMiddleWareFunc(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tokenString, err := request.HeaderExtractor{"token"}.ExtractToken(r)

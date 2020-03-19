@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"fmt"
-
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	uuid "github.com/satori/go.uuid"
@@ -76,14 +74,10 @@ func (repos *GormRepository) Get(uow *UnitOfWork, userId, bookmarkID uuid.UUID, 
 	for _, association := range preloadAssociations {
 		db = db.Preload(association).Where("id = ?", userId)
 	}
-	if bookmarkID == uuid.Nil {
-		return db.Model(out).First(out, "id = ?", userId).Error
-	}
 	return db.Model(out).First(out, "user_id = ? AND id = ?", userId, bookmarkID).Error
 }
 
 func (repos *GormRepository) Add(uow *UnitOfWork, value interface{}) error {
-	fmt.Print(value)
 	return uow.DB.Create(value).Error
 }
 
@@ -106,6 +100,15 @@ func (repo *GormRepository) GetAllByCategory(uow *UnitOfWork, value interface{},
 		return db.Model(out).First(out, "category_id  = ?", value).Error
 	}
 	return db.Model(out).First(out, "category_id = ? AND user_id = ?", value, uid).Error
+}
+
+func (repos *GormRepository) GetUser(uow *UnitOfWork, username string, out interface{},
+	preloadAssociations []string) error {
+	db := uow.DB
+	for _, association := range preloadAssociations {
+		db = db.Preload(association).Where("username = ?", username)
+	}
+	return db.Model(out).First(out, "username = ?", username).Error
 }
 
 //NewGormRepository creates a new GormRepository
