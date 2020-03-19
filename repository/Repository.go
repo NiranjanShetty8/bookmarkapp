@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	uuid "github.com/satori/go.uuid"
@@ -14,8 +16,8 @@ type UnitOfWork struct {
 }
 
 //NewUnitOfWork creates new UnitOfWork
-func NewUnitOfWork(db *gorm.DB, read bool) *UnitOfWork {
-	if read {
+func NewUnitOfWork(db *gorm.DB, readonly bool) *UnitOfWork {
+	if readonly {
 		return &UnitOfWork{
 			DB:        db.New(),
 			readOnly:  true,
@@ -46,8 +48,10 @@ func (uow *UnitOfWork) Commit() {
 //Repository represents generic interface for interacting with DB
 type Repository interface {
 	GetAll(uow *UnitOfWork, uid uuid.UUID, out interface{}, preloadAssociations []string) error
-	GetAllByCategory(ufw *UnitOfWork, value interface{}, condition string, preloadAssociations []string) error
-	Get(uow *UnitOfWork, userId, bookmarkID uuid.UUID, out interface{}, preloadAssociations []string) error
+	GetAllByCategory(ufw *UnitOfWork, value interface{}, condition string,
+		preloadAssociations []string) error
+	Get(uow *UnitOfWork, userId, bookmarkID uuid.UUID, out interface{},
+		preloadAssociations []string) error
 	Add(uow *UnitOfWork, input interface{}) error
 	Delete(uow *UnitOfWork, userId, bookmarkID uuid.UUID, out interface{}) error
 	Update(uow *UnitOfWork, uid uuid.UUID, entity interface{}) error
@@ -56,7 +60,8 @@ type Repository interface {
 //GormRepository implements Repository
 type GormRepository struct{}
 
-func (repos *GormRepository) GetAll(uow *UnitOfWork, uid uuid.UUID, out interface{}, preloadAssociations []string) error {
+func (repos *GormRepository) GetAll(uow *UnitOfWork, uid uuid.UUID, out interface{},
+	preloadAssociations []string) error {
 	//change preload
 	db := uow.DB
 	for _, association := range preloadAssociations {
@@ -69,16 +74,21 @@ func (repos *GormRepository) Get(uow *UnitOfWork, userId, bookmarkID uuid.UUID, 
 	preloadAssociations []string) error {
 	db := uow.DB
 	for _, association := range preloadAssociations {
-		db = db.Preload(association)
+		db = db.Preload(association).Where("id = ?", userId)
+	}
+	if bookmarkID == uuid.Nil {
+		return db.Model(out).First(out, "id = ?", userId).Error
 	}
 	return db.Model(out).First(out, "user_id = ? AND id = ?", userId, bookmarkID).Error
 }
 
-func (repos *GormRepository) Add(uow *UnitOfWork, input interface{}) error {
-	return uow.DB.Create(input).Error
+func (repos *GormRepository) Add(uow *UnitOfWork, value interface{}) error {
+	fmt.Print(value)
+	return uow.DB.Create(value).Error
 }
 
-func (repos *GormRepository) Delete(uow *UnitOfWork, userId, bookmarkID uuid.UUID, value interface{}) error {
+func (repos *GormRepository) Delete(uow *UnitOfWork, userId,
+	bookmarkID uuid.UUID, value interface{}) error {
 	return uow.DB.Model(value).Delete(value, "user_id = ? AND id = ?", userId, bookmarkID).Error
 }
 

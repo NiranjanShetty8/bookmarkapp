@@ -6,6 +6,6 @@ type Bookmark struct {
 	Base
 	Description string    `gorm:type:varchar(200)"`
 	URL         string    `gorm:type:varchar(200)"`
-	UserId      uuid.UUID `gorm:"type:varchar(50);not_null"`
-	CategoryId  uuid.UUID `gorm:"type:varchar(50);not_null"`
+	UserId      uuid.UUID `gorm:"type:varchar(36);not_null"`
+	CategoryId  uuid.UUID `gorm:"type:varchar(36);not_null"`
 }

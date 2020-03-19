@@ -1,4 +1,4 @@
-package service
+package services
 
 import (
 	"github.com/NiranjanShetty8/bookmarkapp/model"
@@ -10,13 +10,6 @@ import (
 type BookmarkService struct {
 	DB         *gorm.DB
 	Repository *repository.GormRepository
-}
-
-func NewBookmarkService(db *gorm.DB, repos *repository.GormRepository) *BookmarkService {
-	return &BookmarkService{
-		DB:         db,
-		Repository: repos,
-	}
 }
 
 func (bms *BookmarkService) GetAllBookmarks(uid uuid.UUID, bookmarks *[]model.Bookmark) error {
@@ -66,7 +59,8 @@ func (bms *BookmarkService) UpdateBookmark(bookmark *model.Bookmark) error {
 }
 
 //uuid.Nil try to make to category name
-func (bms *BookmarkService) GetBookmarksByCategory(userId, categoryId uuid.UUID, bookmark *model.Bookmark) {
+func (bms *BookmarkService) GetBookmarksByCategory(userId, categoryId uuid.UUID,
+	bookmark *model.Bookmark) error {
 	uow := repository.NewUnitOfWork(bms.DB, true)
 	err := bms.Repository.GetAllByCategory(uow, categoryId, userId, bookmark, []string{})
 	if err != nil {
@@ -75,4 +69,14 @@ func (bms *BookmarkService) GetBookmarksByCategory(userId, categoryId uuid.UUID,
 	}
 	uow.Commit()
 	return err
+}
+
+func NewBookmarkService(db *gorm.DB, repos *repository.GormRepository) *BookmarkService {
+	db.AutoMigrate(&model.User{}, &model.Bookmark{})
+	db.Model(&model.Bookmark{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
+	// , &model.Category{}db.Model(&model.Bookmark{}).AddForeignKey("category_id", "categories(id)", "CASCADE", "CASCADE")
+	return &BookmarkService{
+		DB:         db,
+		Repository: repos,
+	}
 }
