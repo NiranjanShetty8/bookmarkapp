@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/NiranjanShetty8/bookmarkapp/model"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	uuid "github.com/satori/go.uuid"
@@ -46,9 +47,9 @@ func (uow *UnitOfWork) Commit() {
 //Repository represents generic interface for interacting with DB
 type Repository interface {
 	GetAll(uow *UnitOfWork, uid uuid.UUID, out interface{}, preloadAssociations []string) error
-	GetAllByCategory(ufw *UnitOfWork, value interface{}, condition string,
-		preloadAssociations []string) error
 	Get(uow *UnitOfWork, userId, bookmarkID uuid.UUID, out interface{},
+		preloadAssociations []string) error
+	GetByName(uow *UnitOfWork, name string, out interface{},
 		preloadAssociations []string) error
 	Add(uow *UnitOfWork, input interface{}) error
 	Delete(uow *UnitOfWork, userId, bookmarkID uuid.UUID, out interface{}) error
@@ -60,55 +61,78 @@ type GormRepository struct{}
 
 func (repos *GormRepository) GetAll(uow *UnitOfWork, uid uuid.UUID, out interface{},
 	preloadAssociations []string) error {
-	//change preload
 	db := uow.DB
 	for _, association := range preloadAssociations {
 		db = uow.DB.Preload(association)
 	}
-	return db.Model(out).Find(out, "user_id = ?", uid).Error
+	switch out.(type) {
+	case *model.User:
+		return db.Model(out).Find(out).Error
+	case *model.Category:
+		return db.Model(out).Find(out, "user_id = ?", uid).Error
+	default:
+		return db.Model(out).Find(out, "category_id = ?", uid).Error
+	}
 }
 
-func (repos *GormRepository) Get(uow *UnitOfWork, userId, bookmarkID uuid.UUID, out interface{},
+func (repos *GormRepository) Get(uow *UnitOfWork, parentID, childID uuid.UUID, out interface{},
 	preloadAssociations []string) error {
 	db := uow.DB
 	for _, association := range preloadAssociations {
-		db = db.Preload(association).Where("id = ?", userId)
+		db = db.Preload(association).Where("id = ?", parentID)
 	}
-	return db.Model(out).First(out, "user_id = ? AND id = ?", userId, bookmarkID).Error
+	switch out.(type) {
+	case *model.User:
+		return db.Model(out).First(out, "id = ?", parentID).Error
+	case *model.Category:
+		return db.Model(out).First(out, "user_id = ? AND id = ?", parentID, childID).Error
+	default:
+		return db.Model(out).First(out, "category_id = ? AND id = ?", parentID, childID).Error
+	}
+}
+
+func (repos *GormRepository) GetByName(uow *UnitOfWork, name string, out interface{},
+	preloadAssociations []string) error {
+	db := uow.DB
+	switch out.(type) {
+	case *model.User:
+		for _, association := range preloadAssociations {
+			db = db.Preload(association).Where("username = ?", name)
+		}
+		return db.Model(out).First(out, "username = ?", name).Error
+
+	case *model.Category:
+		for _, association := range preloadAssociations {
+			db = db.Preload(association).Where("name = ?", name)
+		}
+		return db.Model(out).First(out, "name = ?", name).Error
+
+	default:
+		for _, association := range preloadAssociations {
+			db = db.Preload(association).Where("description = ?", name)
+		}
+		return db.Model(out).First(out, "description = ?", name).Error
+	}
 }
 
 func (repos *GormRepository) Add(uow *UnitOfWork, value interface{}) error {
 	return uow.DB.Create(value).Error
 }
 
-func (repos *GormRepository) Delete(uow *UnitOfWork, userId,
-	bookmarkID uuid.UUID, value interface{}) error {
-	return uow.DB.Model(value).Delete(value, "user_id = ? AND id = ?", userId, bookmarkID).Error
+func (repos *GormRepository) Delete(uow *UnitOfWork, parentID,
+	childID uuid.UUID, value interface{}) error {
+	switch value.(type) {
+	case *model.User:
+		return uow.DB.Model(value).Delete(value, "id = ?", parentID).Error
+	case *model.Category:
+		return uow.DB.Model(value).Delete(value, "user_id = ? AND id = ?", parentID, childID).Error
+	default:
+		return uow.DB.Model(value).Delete(value, "category_id = ? AND id = ?", parentID, childID).Error
+	}
 }
 
 func (repos *GormRepository) Update(uow *UnitOfWork, entity interface{}) error {
 	return uow.DB.Model(entity).Update(entity).Error
-}
-
-func (repo *GormRepository) GetAllByCategory(uow *UnitOfWork, value interface{},
-	uid interface{}, out interface{}, preloadAssociations []string) error {
-	db := uow.DB
-	for _, association := range preloadAssociations {
-		db = db.Preload(association)
-	}
-	if uid == nil {
-		return db.Model(out).First(out, "category_id  = ?", value).Error
-	}
-	return db.Model(out).First(out, "category_id = ? AND user_id = ?", value, uid).Error
-}
-
-func (repos *GormRepository) GetUser(uow *UnitOfWork, username string, out interface{},
-	preloadAssociations []string) error {
-	db := uow.DB
-	for _, association := range preloadAssociations {
-		db = db.Preload(association).Where("username = ?", username)
-	}
-	return db.Model(out).First(out, "username = ?", username).Error
 }
 
 //NewGormRepository creates a new GormRepository

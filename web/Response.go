@@ -2,7 +2,6 @@ package web
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -13,7 +12,6 @@ func writeToHeader(w *http.ResponseWriter, statusCode int, payload interface{}) 
 
 //Set response with status code
 func RespondJSON(w *http.ResponseWriter, statusCode int, content interface{}) {
-	fmt.Println(content)
 	response, err := json.Marshal(content)
 	if err != nil {
 		writeToHeader(w, http.StatusInternalServerError, err.Error())
@@ -33,7 +31,7 @@ func RespondError(w *http.ResponseWriter, err error) {
 	case ValidationError:
 		RespondJSON(w, http.StatusBadRequest, err)
 	case HTTPError:
-		httpError := err.(HTTPError)
+		httpError := err.(*HTTPError)
 		RespondErrorMessage(w, httpError.HTTPStatus, httpError.ErrorKey)
 	default:
 		RespondErrorMessage(w, http.StatusInternalServerError, err.Error())
