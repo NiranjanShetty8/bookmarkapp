@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/NiranjanShetty8/bookmarkapp/model"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -96,6 +98,7 @@ func (repos *GormRepository) GetByName(uow *UnitOfWork, name string, out interfa
 	db := uow.DB
 	switch out.(type) {
 	case *model.User:
+		fmt.Println("in user switch")
 		for _, association := range preloadAssociations {
 			db = db.Preload(association).Where("username = ?", name)
 		}
@@ -109,9 +112,9 @@ func (repos *GormRepository) GetByName(uow *UnitOfWork, name string, out interfa
 
 	default:
 		for _, association := range preloadAssociations {
-			db = db.Preload(association).Where("description = ?", name)
+			db = db.Preload(association).Where("name = ?", name)
 		}
-		return db.Model(out).First(out, "description = ?", name).Error
+		return db.Model(out).First(out, "name = ?", name).Error
 	}
 }
 

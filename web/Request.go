@@ -25,7 +25,7 @@ func UnmarshalJSON(r *http.Request, target interface{}) error {
 
 	err = json.Unmarshal(body, target)
 	if err != nil {
-		return errors.New("Unavle to Parse Data")
+		return errors.New("Unable to Parse Data")
 	}
 	return nil
 }

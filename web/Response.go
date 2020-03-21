@@ -28,9 +28,10 @@ func RespondErrorMessage(w *http.ResponseWriter, code int, message string) {
 
 func RespondError(w *http.ResponseWriter, err error) {
 	switch err.(type) {
-	case ValidationError:
-		RespondJSON(w, http.StatusBadRequest, err)
-	case HTTPError:
+	case ValidationError, *ValidationError:
+		err, _ := err.(*ValidationError)
+		RespondJSON(w, http.StatusBadRequest, err.ErrorKey+": "+err.Errors["error"])
+	case HTTPError, *HTTPError:
 		httpError := err.(*HTTPError)
 		RespondErrorMessage(w, httpError.HTTPStatus, httpError.ErrorKey)
 	default:

@@ -59,16 +59,10 @@ func (bms *BookmarkService) UpdateBookmark(bookmark *model.Bookmark) error {
 	return err
 }
 
-//uuid.Nil try to make to category name
-func (bms *BookmarkService) GetBookmarkByDescription(catgeoryName string,
+func (bms *BookmarkService) GetBookmarkByName(bookmarkName string,
 	bookmark *model.Bookmark) error {
 	uow := repository.NewUnitOfWork(bms.DB, true)
-	err := bms.Repository.GetByName(uow, catgeoryName, bookmark, []string{})
-	if err != nil {
-		uow.Complete()
-		return err
-	}
-	uow.Commit()
+	err := bms.Repository.GetByName(uow, bookmarkName, bookmark, []string{})
 	return err
 }
 

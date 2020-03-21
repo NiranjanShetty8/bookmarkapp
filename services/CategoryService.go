@@ -12,13 +12,13 @@ type CategoryService struct {
 	Repository *repository.GormRepository
 }
 
-func (cs *CategoryService) GetAllCategories(uid uuid.UUID, categories []*model.Category) error {
+func (cs *CategoryService) GetAllCategories(uid uuid.UUID, categories *[]model.Category) error {
 	uow := repository.NewUnitOfWork(cs.DB, true)
 	err := cs.Repository.GetAll(uow, uid, categories, []string{"Bookmarks"})
 	return err
 }
 
-func (cs *CategoryService) GetCategory(userId, categoryId uuid.UUID, category model.Category) error {
+func (cs *CategoryService) GetCategory(userId, categoryId uuid.UUID, category *model.Category) error {
 	uow := repository.NewUnitOfWork(cs.DB, true)
 	err := cs.Repository.Get(uow, userId, categoryId, category, []string{"Bookmarks"})
 	return err
@@ -32,7 +32,7 @@ func (cs *CategoryService) GetCategoryByName(categoryName string, category *mode
 
 func (cs *CategoryService) AddCategory(category *model.Category) error {
 	uow := repository.NewUnitOfWork(cs.DB, false)
-	// category.ID = uuid.NewV4()
+	category.ID = uuid.NewV4()
 	err := cs.Repository.Add(uow, category)
 	if err != nil {
 		uow.Complete()

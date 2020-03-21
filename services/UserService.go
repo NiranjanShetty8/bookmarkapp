@@ -7,6 +7,7 @@ import (
 	"github.com/NiranjanShetty8/bookmarkapp/model"
 	"github.com/NiranjanShetty8/bookmarkapp/repository"
 	"github.com/jinzhu/gorm"
+	uuid "github.com/satori/go.uuid"
 )
 
 type UserService struct {
@@ -16,7 +17,7 @@ type UserService struct {
 
 func (us *UserService) Register(user *model.User) error {
 	uow := repository.NewUnitOfWork(us.DB, false)
-	// user.ID = uuid.NewV4()
+	user.ID = uuid.NewV4()
 	err := us.Repository.Add(uow, user)
 	if err != nil {
 		uow.Complete()
@@ -26,9 +27,8 @@ func (us *UserService) Register(user *model.User) error {
 	return err
 }
 
-func (us *UserService) Login(user *model.User) error {
+func (us *UserService) Login(user, actualUser *model.User) error {
 	uow := repository.NewUnitOfWork(us.DB, true)
-	actualUser := model.User{}
 	err := us.Repository.GetByName(uow, user.Username, &actualUser,
 		[]string{"Categories", "Categories.Bookmarks"})
 	if err != nil {
@@ -40,7 +40,7 @@ func (us *UserService) Login(user *model.User) error {
 	if user.Password != actualUser.Password {
 		return fmt.Errorf("Incorrect Password")
 	}
-	fmt.Println("Access Granted", actualUser.Username,
+	fmt.Println("Access Granted", actualUser.ID, actualUser.Username,
 		actualUser.Categories)
 	return err
 }
