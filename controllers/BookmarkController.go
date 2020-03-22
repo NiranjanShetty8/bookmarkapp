@@ -54,7 +54,10 @@ func (bmkController *BookmarkController) GetBookmarkByID(w http.ResponseWriter, 
 	err = bmkController.BookmarkService.GetBookmarkById(categoryID, bookmarkID, &bookmark)
 	if err != nil {
 		web.RespondError(&w, err)
+		return
 	}
+	web.RespondJSON(&w, http.StatusOK, bookmark)
+
 }
 
 func (bmkController *BookmarkController) GetBookmarkByName(w http.ResponseWriter, r *http.Request) {
@@ -66,7 +69,10 @@ func (bmkController *BookmarkController) GetBookmarkByName(w http.ResponseWriter
 	err = bmkController.BookmarkService.GetBookmarkByName(mux.Vars(r)["bookmarkname"], &bookmark)
 	if err != nil {
 		web.RespondError(&w, err)
+		return
 	}
+	web.RespondJSON(&w, http.StatusOK, bookmark)
+
 }
 
 func (bmkController *BookmarkController) AddBookmark(w http.ResponseWriter, r *http.Request) {
@@ -75,7 +81,7 @@ func (bmkController *BookmarkController) AddBookmark(w http.ResponseWriter, r *h
 		return
 	}
 	bookmark := model.Bookmark{}
-	err = web.UnmarshalJSON(r, bookmark)
+	err = web.UnmarshalJSON(r, &bookmark)
 	if err != nil {
 		web.RespondError(&w, web.NewValidationError("error", map[string]string{"error": err.Error()}))
 		return
@@ -89,7 +95,10 @@ func (bmkController *BookmarkController) AddBookmark(w http.ResponseWriter, r *h
 	err = bmkController.BookmarkService.AddBookmark(&bookmark)
 	if err != nil {
 		web.RespondError(&w, err)
+		return
 	}
+	web.RespondJSON(&w, http.StatusOK, bookmark.ID)
+
 }
 
 func (bmkController *BookmarkController) UpdateBookmark(w http.ResponseWriter, r *http.Request) {
@@ -98,7 +107,7 @@ func (bmkController *BookmarkController) UpdateBookmark(w http.ResponseWriter, r
 		return
 	}
 	bookmark := model.Bookmark{}
-	err = web.UnmarshalJSON(r, bookmark)
+	err = web.UnmarshalJSON(r, &bookmark)
 	if err != nil {
 		web.RespondError(&w, web.NewValidationError("error", map[string]string{"error": err.Error()}))
 		return
@@ -117,7 +126,10 @@ func (bmkController *BookmarkController) UpdateBookmark(w http.ResponseWriter, r
 	err = bmkController.BookmarkService.UpdateBookmark(&bookmark)
 	if err != nil {
 		web.RespondError(&w, err)
+		return
 	}
+	web.RespondJSON(&w, http.StatusOK, "Bookmark Updated")
+
 }
 
 func (bmkController *BookmarkController) DeleteBookmark(w http.ResponseWriter, r *http.Request) {
@@ -132,7 +144,10 @@ func (bmkController *BookmarkController) DeleteBookmark(w http.ResponseWriter, r
 	err = bmkController.BookmarkService.DeleteBookmark(categoryID, bookmarkID)
 	if err != nil {
 		web.RespondError(&w, err)
+		return
 	}
+	web.RespondJSON(&w, http.StatusOK, "Bookmark Deleted")
+
 }
 
 func NewBookmarkController(bms *services.BookmarkService) *BookmarkController {

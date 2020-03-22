@@ -31,9 +31,9 @@ func AuthMiddleWareFunc(next http.Handler) http.Handler {
 			return
 		}
 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-			var actualUserID, userID *uuid.UUID
+			var actualUserID, userID uuid.UUID
 			var err error
-			*actualUserID, err = uuid.FromString(mux.Vars(r)["userid"])
+			actualUserID, err = uuid.FromString(mux.Vars(r)["userid"])
 			if err != nil {
 				web.RespondError(&w, web.NewHTTPError(err.Error(), http.StatusForbidden))
 				return
@@ -44,13 +44,13 @@ func AuthMiddleWareFunc(next http.Handler) http.Handler {
 				web.RespondError(&w, web.NewHTTPError(err.Error(), http.StatusForbidden))
 				return
 			}
-			*userID, err = uuid.FromString(id)
+			userID, err = uuid.FromString(id)
 			if err != nil {
 				web.RespondError(&w, web.NewHTTPError(err.Error(), http.StatusForbidden))
 				return
 			}
 
-			if *userID != *actualUserID {
+			if userID != actualUserID {
 				web.RespondError(&w, web.NewHTTPError("Access Denied", http.StatusForbidden))
 				return
 			}

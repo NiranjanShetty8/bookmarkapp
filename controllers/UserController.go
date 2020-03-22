@@ -97,7 +97,7 @@ func (uc *UserController) getToken(user *model.User, w *http.ResponseWriter) {
 		"userID":   user.ID,
 		"IssuedAt": time.Now().Unix() + session,
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	fmt.Println(token)
 	fmt.Println(security.GetSecretKey())
 	tokenString, err := token.SignedString(security.GetSecretKey())

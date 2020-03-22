@@ -6,5 +6,5 @@ type Category struct {
 	Base
 	Name      string     `gorm:"type:varchar(40)"`
 	UserID    uuid.UUID  `gorm:"type:varchar(36);not_null"`
-	Bookmarks []Bookmark `json:"-"`
+	Bookmarks []Bookmark `json:"bookmarks"`
 }

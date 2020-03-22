@@ -68,9 +68,9 @@ func (repos *GormRepository) GetAll(uow *UnitOfWork, uid uuid.UUID, out interfac
 		db = uow.DB.Preload(association)
 	}
 	switch out.(type) {
-	case *model.User:
+	case *[]model.User:
 		return db.Model(out).Find(out).Error
-	case *model.Category:
+	case *[]model.Category:
 		return db.Model(out).Find(out, "user_id = ?", uid).Error
 	default:
 		return db.Model(out).Find(out, "category_id = ?", uid).Error
@@ -87,7 +87,10 @@ func (repos *GormRepository) Get(uow *UnitOfWork, parentID, childID uuid.UUID, o
 	case *model.User:
 		return db.Model(out).First(out, "id = ?", parentID).Error
 	case *model.Category:
-		return db.Model(out).First(out, "user_id = ? AND id = ?", parentID, childID).Error
+		fmt.Print("IN CATEGORY BY")
+		fmt.Println("Get Repo", parentID, childID)
+		// return db.Model(out).First(out, "user_id = ? AND id = ?", parentID, childID).Error
+		return db.Model(out).Find(out, "user_id = ?", parentID).Error
 	default:
 		return db.Model(out).First(out, "category_id = ? AND id = ?", parentID, childID).Error
 	}
@@ -111,6 +114,7 @@ func (repos *GormRepository) GetByName(uow *UnitOfWork, name string, out interfa
 		return db.Model(out).First(out, "name = ?", name).Error
 
 	default:
+		fmt.Println("In default")
 		for _, association := range preloadAssociations {
 			db = db.Preload(association).Where("name = ?", name)
 		}

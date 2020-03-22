@@ -29,8 +29,10 @@ func (us *UserService) Register(user *model.User) error {
 
 func (us *UserService) Login(user, actualUser *model.User) error {
 	uow := repository.NewUnitOfWork(us.DB, true)
-	err := us.Repository.GetByName(uow, user.Username, &actualUser,
+	// var actualUser *model.User
+	err := us.Repository.GetByName(uow, user.Username, actualUser,
 		[]string{"Categories", "Categories.Bookmarks"})
+	// actualUser = out.(*model.User)
 	if err != nil {
 		if strings.EqualFold(fmt.Sprintf("%v", err), "Record not found") {
 			return fmt.Errorf("Incorrect Username")

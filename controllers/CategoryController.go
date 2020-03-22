@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -54,8 +55,12 @@ func (cc *CategoryController) GetCategoryByID(w http.ResponseWriter, r *http.Req
 	}
 	err = cc.CategoryService.GetCategory(userID, categoryID, &category)
 	if err != nil {
+		fmt.Print("controller error:", err)
 		web.RespondError(&w, err)
+		return
 	}
+	web.RespondJSON(&w, http.StatusOK, category)
+
 }
 
 func (cc *CategoryController) GetCategoryByName(w http.ResponseWriter, r *http.Request) {
@@ -67,7 +72,10 @@ func (cc *CategoryController) GetCategoryByName(w http.ResponseWriter, r *http.R
 	err = cc.CategoryService.GetCategoryByName(mux.Vars(r)["categoryname"], &category)
 	if err != nil {
 		web.RespondError(&w, err)
+		return
 	}
+	web.RespondJSON(&w, http.StatusOK, category)
+
 }
 
 func (cc *CategoryController) AddCategory(w http.ResponseWriter, r *http.Request) {
@@ -76,7 +84,7 @@ func (cc *CategoryController) AddCategory(w http.ResponseWriter, r *http.Request
 		return
 	}
 	category := model.Category{}
-	err = web.UnmarshalJSON(r, category)
+	err = web.UnmarshalJSON(r, &category)
 	if err != nil {
 		web.RespondError(&w, web.NewValidationError("error", map[string]string{"error": err.Error()}))
 		return
@@ -90,7 +98,9 @@ func (cc *CategoryController) AddCategory(w http.ResponseWriter, r *http.Request
 	err = cc.CategoryService.AddCategory(&category)
 	if err != nil {
 		web.RespondError(&w, err)
+		return
 	}
+	web.RespondJSON(&w, http.StatusOK, category.ID)
 }
 
 func (cc *CategoryController) UpdateCategory(w http.ResponseWriter, r *http.Request) {
@@ -99,7 +109,7 @@ func (cc *CategoryController) UpdateCategory(w http.ResponseWriter, r *http.Requ
 		return
 	}
 	category := model.Category{}
-	err = web.UnmarshalJSON(r, category)
+	err = web.UnmarshalJSON(r, &category)
 	if err != nil {
 		web.RespondError(&w, web.NewValidationError("error", map[string]string{"error": err.Error()}))
 		return
@@ -118,7 +128,10 @@ func (cc *CategoryController) UpdateCategory(w http.ResponseWriter, r *http.Requ
 	err = cc.CategoryService.UpdateCategory(&category)
 	if err != nil {
 		web.RespondError(&w, err)
+		return
 	}
+	web.RespondJSON(&w, http.StatusOK, "Category Updated.")
+
 }
 
 func (cc *CategoryController) DeleteCategory(w http.ResponseWriter, r *http.Request) {
@@ -133,7 +146,9 @@ func (cc *CategoryController) DeleteCategory(w http.ResponseWriter, r *http.Requ
 	err = cc.CategoryService.DeleteCategory(userID, catergoryID)
 	if err != nil {
 		web.RespondError(&w, err)
+		return
 	}
+	web.RespondJSON(&w, http.StatusOK, "Category Deleted.")
 }
 
 func NewCategoryController(cs *services.CategoryService) *CategoryController {

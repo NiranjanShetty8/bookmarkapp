@@ -1,6 +1,8 @@
 package services
 
 import (
+	"fmt"
+
 	"github.com/NiranjanShetty8/bookmarkapp/model"
 	"github.com/NiranjanShetty8/bookmarkapp/repository"
 	"github.com/jinzhu/gorm"
@@ -18,9 +20,11 @@ func (cs *CategoryService) GetAllCategories(uid uuid.UUID, categories *[]model.C
 	return err
 }
 
-func (cs *CategoryService) GetCategory(userId, categoryId uuid.UUID, category *model.Category) error {
+func (cs *CategoryService) GetCategory(userID, categoryID uuid.UUID, category *model.Category) error {
 	uow := repository.NewUnitOfWork(cs.DB, true)
-	err := cs.Repository.Get(uow, userId, categoryId, category, []string{"Bookmarks"})
+	fmt.Println("uid:", userID, categoryID)
+	err := cs.Repository.Get(uow, userID, categoryID, category, []string{"Bookmarks"})
+	fmt.Print("error", err)
 	return err
 }
 
@@ -44,7 +48,7 @@ func (cs *CategoryService) AddCategory(category *model.Category) error {
 
 func (cs *CategoryService) DeleteCategory(userId, categoryId uuid.UUID) error {
 	uow := repository.NewUnitOfWork(cs.DB, false)
-	err := cs.Repository.Delete(uow, userId, categoryId, model.Category{})
+	err := cs.Repository.Delete(uow, userId, categoryId, &model.Category{})
 	if err != nil {
 		uow.Complete()
 		return err
