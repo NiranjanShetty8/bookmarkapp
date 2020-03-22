@@ -8,7 +8,7 @@ import (
 )
 
 //UnmarshalJSON checks for empty body and then parses JSON into the target
-//target should be a pointer
+//target should be a pointer.
 func UnmarshalJSON(r *http.Request, target interface{}) error {
 	if r.Body == nil {
 		return errors.New("There is problem while reading data")

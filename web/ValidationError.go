@@ -13,6 +13,7 @@ func (err ValidationError) Error() string {
 	return fmt.Sprintf("%s", err.Errors)
 }
 
+//returns a new ValidationError instance
 func NewValidationError(err string, failedValidation map[string]string) *ValidationError {
 	return &ValidationError{
 		ErrorKey: err,

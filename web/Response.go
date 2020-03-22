@@ -5,6 +5,7 @@ import (
 	"net/http"
 )
 
+//Does the writeHeader & write in a single func
 func writeToHeader(w *http.ResponseWriter, statusCode int, payload interface{}) {
 	(*w).WriteHeader(statusCode)
 	(*w).Write(payload.([]byte))
@@ -26,6 +27,7 @@ func RespondErrorMessage(w *http.ResponseWriter, code int, message string) {
 	RespondJSON(w, code, message)
 }
 
+//Filters the error according to type and responds accordingly
 func RespondError(w *http.ResponseWriter, err error) {
 	switch err.(type) {
 	case ValidationError, *ValidationError:
