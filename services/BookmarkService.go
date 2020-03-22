@@ -12,6 +12,7 @@ type BookmarkService struct {
 	Repository *repository.GormRepository
 }
 
+// Service to get all bookmarks
 func (bms *BookmarkService) GetAllBookmarks(uid uuid.UUID, bookmarks *[]model.Bookmark) error {
 	uow := repository.NewUnitOfWork(bms.DB, true)
 	err := bms.Repository.GetAll(uow, uid, bookmarks, []string{})
@@ -19,12 +20,14 @@ func (bms *BookmarkService) GetAllBookmarks(uid uuid.UUID, bookmarks *[]model.Bo
 
 }
 
+// Gets bookmark by ID
 func (bms *BookmarkService) GetBookmarkById(categoryID, bookmarkID uuid.UUID, bookmark *model.Bookmark) error {
 	uow := repository.NewUnitOfWork(bms.DB, true)
 	err := bms.Repository.Get(uow, categoryID, bookmarkID, bookmark, []string{})
 	return err
 }
 
+// Adds a new bookmark
 func (bms *BookmarkService) AddBookmark(bookmark *model.Bookmark) error {
 	uow := repository.NewUnitOfWork(bms.DB, false)
 	bookmark.ID = uuid.NewV4()
@@ -37,6 +40,7 @@ func (bms *BookmarkService) AddBookmark(bookmark *model.Bookmark) error {
 	return err
 }
 
+// Deletes specific bookmark
 func (bms *BookmarkService) DeleteBookmark(categoryID, bookmarkId uuid.UUID) error {
 	uow := repository.NewUnitOfWork(bms.DB, false)
 	err := bms.Repository.Delete(uow, categoryID, bookmarkId, model.Bookmark{})
@@ -48,6 +52,7 @@ func (bms *BookmarkService) DeleteBookmark(categoryID, bookmarkId uuid.UUID) err
 	return err
 }
 
+//Updates specific bookmark
 func (bms *BookmarkService) UpdateBookmark(bookmark *model.Bookmark) error {
 	uow := repository.NewUnitOfWork(bms.DB, false)
 	err := bms.Repository.Update(uow, bookmark)
@@ -59,6 +64,7 @@ func (bms *BookmarkService) UpdateBookmark(bookmark *model.Bookmark) error {
 	return err
 }
 
+// Gets bookmark by name
 func (bms *BookmarkService) GetBookmarkByName(bookmarkName string, categoryID uuid.UUID,
 	bookmark *model.Bookmark) error {
 	uow := repository.NewUnitOfWork(bms.DB, true)
@@ -66,11 +72,11 @@ func (bms *BookmarkService) GetBookmarkByName(bookmarkName string, categoryID uu
 	return err
 }
 
+// returns instance of BookmarkService
 func NewBookmarkService(db *gorm.DB, repos *repository.GormRepository) *BookmarkService {
 	db = db.AutoMigrate(&model.Category{}, &model.Bookmark{})
 	db.Model(&model.Bookmark{}).
 		AddForeignKey("category_id", "categories(id)", "CASCADE", "CASCADE")
-		// AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
 	return &BookmarkService{
 		DB:         db,
 		Repository: repos,
