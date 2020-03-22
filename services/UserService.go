@@ -1,7 +1,7 @@
 package services
 
 import (
-	"fmt"
+	"errors"
 	"strings"
 
 	"github.com/NiranjanShetty8/bookmarkapp/model"
@@ -15,6 +15,7 @@ type UserService struct {
 	Repository *repository.GormRepository
 }
 
+//Service used to register new user
 func (us *UserService) Register(user *model.User) error {
 	uow := repository.NewUnitOfWork(us.DB, false)
 	user.ID = uuid.NewV4()
@@ -27,26 +28,24 @@ func (us *UserService) Register(user *model.User) error {
 	return err
 }
 
+//Service used to login an existing user
 func (us *UserService) Login(user, actualUser *model.User) error {
 	uow := repository.NewUnitOfWork(us.DB, true)
-	// var actualUser *model.User
 	err := us.Repository.GetByName(uow, user.Username, uuid.Nil, actualUser,
 		[]string{"Categories", "Categories.Bookmarks"})
-	// actualUser = out.(*model.User)
 	if err != nil {
-		if strings.EqualFold(fmt.Sprintf("%v", err), "Record not found") {
-			return fmt.Errorf("Incorrect Username")
+		if strings.EqualFold(err.Error(), "Record not found") {
+			return errors.New("Incorrect Username")
 		}
 		return err
 	}
 	if user.Password != actualUser.Password {
-		return fmt.Errorf("Incorrect Password")
+		return errors.New("Incorrect Password")
 	}
-	fmt.Println("Access Granted", actualUser.ID, actualUser.Username,
-		actualUser.Categories)
 	return err
 }
 
+//Returns instance of UserService
 func NewUserService(db *gorm.DB, repos *repository.GormRepository) *UserService {
 	db.AutoMigrate(&model.User{}, &model.Category{}, &model.Bookmark{})
 	return &UserService{
