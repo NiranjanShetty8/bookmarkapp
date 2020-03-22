@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"fmt"
-
 	"github.com/NiranjanShetty8/bookmarkapp/model"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -61,6 +59,7 @@ type Repository interface {
 //GormRepository implements Repository
 type GormRepository struct{}
 
+//GetAll gets all the records of the model specified
 func (repos *GormRepository) GetAll(uow *UnitOfWork, uid uuid.UUID, out interface{},
 	preloadAssociations []string) error {
 	db := uow.DB
@@ -77,6 +76,7 @@ func (repos *GormRepository) GetAll(uow *UnitOfWork, uid uuid.UUID, out interfac
 	}
 }
 
+//Get gets the specified record using ID
 func (repos *GormRepository) Get(uow *UnitOfWork, parentID, childID uuid.UUID, out interface{},
 	preloadAssociations []string) error {
 	db := uow.DB
@@ -93,26 +93,24 @@ func (repos *GormRepository) Get(uow *UnitOfWork, parentID, childID uuid.UUID, o
 	}
 }
 
+//GetByName gets specific record using name feild
 func (repos *GormRepository) GetByName(uow *UnitOfWork, name string,
 	parentID uuid.UUID, out interface{}, preloadAssociations []string) error {
 	db := uow.DB
 	switch out.(type) {
 	case *model.User:
-		fmt.Println("in user switch")
 		for _, association := range preloadAssociations {
 			db = db.Preload(association).Where("username = ?", name)
 		}
 		return db.Model(out).First(out, "username = ?", name).Error
 
 	case *model.Category:
-		fmt.Println("name:", out)
 		for _, association := range preloadAssociations {
 			db = db.Preload(association).Where("name = ?", name)
 		}
 		return db.Model(out).First(out, "name = ? and user_id = ?", name, parentID).Error
 
 	default:
-		fmt.Println("In default")
 		for _, association := range preloadAssociations {
 			db = db.Preload(association).Where("name = ?", name)
 		}
@@ -120,10 +118,12 @@ func (repos *GormRepository) GetByName(uow *UnitOfWork, name string,
 	}
 }
 
+//Add adds a record to the model specified
 func (repos *GormRepository) Add(uow *UnitOfWork, value interface{}) error {
 	return uow.DB.Create(value).Error
 }
 
+//Delete deletes a record from the model specified
 func (repos *GormRepository) Delete(uow *UnitOfWork, parentID,
 	childID uuid.UUID, value interface{}) error {
 	switch value.(type) {
@@ -136,6 +136,7 @@ func (repos *GormRepository) Delete(uow *UnitOfWork, parentID,
 	}
 }
 
+//Update updates the specified record from a particular model
 func (repos *GormRepository) Update(uow *UnitOfWork, entity interface{}) error {
 	return uow.DB.Model(entity).Update(entity).Error
 }
