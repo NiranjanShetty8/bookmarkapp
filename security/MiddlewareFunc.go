@@ -13,10 +13,7 @@ import (
 
 var secretKey = []byte("Private_Key")
 
-func GetSecretKey() []byte {
-	return secretKey
-}
-
+// Middleware func to check token and provide or deny access to resources
 func AuthMiddleWareFunc(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tokenString, err := request.HeaderExtractor{"token"}.ExtractToken(r)
@@ -38,7 +35,6 @@ func AuthMiddleWareFunc(next http.Handler) http.Handler {
 				web.RespondError(&w, web.NewHTTPError(err.Error(), http.StatusForbidden))
 				return
 			}
-			//ID check
 			id, ok := claims["userID"].(string)
 			if !ok {
 				web.RespondError(&w, web.NewHTTPError(err.Error(), http.StatusForbidden))
@@ -59,4 +55,9 @@ func AuthMiddleWareFunc(next http.Handler) http.Handler {
 			web.RespondError(&w, web.NewHTTPError(err.Error(), http.StatusForbidden))
 		}
 	})
+}
+
+// To get the secret key
+func GetSecretKey() []byte {
+	return secretKey
 }
