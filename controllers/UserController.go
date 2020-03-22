@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -19,12 +18,14 @@ type UserController struct {
 	userService *services.UserService
 }
 
+// Returns instance of UserController
 func NewUserController(us *services.UserService) *UserController {
 	return &UserController{
 		userService: us,
 	}
 }
 
+// Does validations and adds user to database
 func (uc *UserController) register(w http.ResponseWriter, r *http.Request) {
 	user := model.User{}
 	err := web.UnmarshalJSON(r, &user)
@@ -49,6 +50,7 @@ func (uc *UserController) register(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// Handles validation,Authentication & Authorization of user
 func (uc *UserController) login(w http.ResponseWriter, r *http.Request) {
 	user := model.User{}
 	actualUser := model.User{}
@@ -66,7 +68,6 @@ func (uc *UserController) login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = uc.userService.Login(&user, &actualUser)
-	fmt.Println("login", actualUser)
 	if err != nil {
 		web.RespondError(&w, web.NewValidationError("mismatch", map[string]string{"error": err.Error()}))
 		return
@@ -74,6 +75,7 @@ func (uc *UserController) login(w http.ResponseWriter, r *http.Request) {
 	uc.getToken(&actualUser, &w)
 }
 
+// Does the actual validation
 func (uc *UserController) validateUser(w http.ResponseWriter, user *model.User) error {
 	username := strings.TrimSpace(user.Username)
 	if username == "" {
@@ -89,17 +91,15 @@ func (uc *UserController) validateUser(w http.ResponseWriter, user *model.User) 
 	return nil
 }
 
+// Responds with unique token after login
 func (uc *UserController) getToken(user *model.User, w *http.ResponseWriter) {
 	const session int64 = 600
-	fmt.Println("token", user)
 	claims := jwt.MapClaims{
 		"username": user.Username,
 		"userID":   user.ID,
 		"IssuedAt": time.Now().Unix() + session,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	fmt.Println(token)
-	fmt.Println(security.GetSecretKey())
 	tokenString, err := token.SignedString(security.GetSecretKey())
 	if err != nil {
 		web.RespondError(w, web.NewValidationError("error", map[string]string{"error": err.Error()}))
@@ -108,6 +108,7 @@ func (uc *UserController) getToken(user *model.User, w *http.ResponseWriter) {
 	web.RespondJSON(w, http.StatusOK, security.Response{Token: tokenString, User: *user})
 }
 
+// Registers routes in router
 func (uc *UserController) RegisterRoutes(r *mux.Router) {
 	r.HandleFunc("/api/bookmarkapp/user/register", uc.register).Methods("POST")
 	r.HandleFunc("/api/bookmarkapp/user/login", uc.login).Methods("POST")
