@@ -28,9 +28,10 @@ func (cs *CategoryService) GetCategory(userID, categoryID uuid.UUID, category *m
 	return err
 }
 
-func (cs *CategoryService) GetCategoryByName(categoryName string, category *model.Category) error {
+func (cs *CategoryService) GetCategoryByName(categoryName string, userID uuid.UUID,
+	category *model.Category) error {
 	uow := repository.NewUnitOfWork(cs.DB, true)
-	err := cs.Repository.GetByName(uow, categoryName, category, []string{"Bookmarks"})
+	err := cs.Repository.GetByName(uow, categoryName, userID, category, []string{"Bookmarks"})
 	return err
 }
 

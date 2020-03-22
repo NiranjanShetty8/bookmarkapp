@@ -81,23 +81,20 @@ func (repos *GormRepository) Get(uow *UnitOfWork, parentID, childID uuid.UUID, o
 	preloadAssociations []string) error {
 	db := uow.DB
 	for _, association := range preloadAssociations {
-		db = db.Preload(association).Where("id = ?", parentID)
+		db = db.Preload(association).Where("id = ?", childID)
 	}
 	switch out.(type) {
 	case *model.User:
-		return db.Model(out).First(out, "id = ?", parentID).Error
+		return db.Model(out).First(out, "id = ?", childID).Error
 	case *model.Category:
-		fmt.Print("IN CATEGORY BY")
-		fmt.Println("Get Repo", parentID, childID)
-		// return db.Model(out).First(out, "user_id = ? AND id = ?", parentID, childID).Error
-		return db.Model(out).Find(out, "user_id = ?", parentID).Error
+		return db.Model(out).First(out, "user_id = ? AND id = ?", parentID, childID).Error
 	default:
 		return db.Model(out).First(out, "category_id = ? AND id = ?", parentID, childID).Error
 	}
 }
 
-func (repos *GormRepository) GetByName(uow *UnitOfWork, name string, out interface{},
-	preloadAssociations []string) error {
+func (repos *GormRepository) GetByName(uow *UnitOfWork, name string,
+	parentID uuid.UUID, out interface{}, preloadAssociations []string) error {
 	db := uow.DB
 	switch out.(type) {
 	case *model.User:
@@ -108,17 +105,18 @@ func (repos *GormRepository) GetByName(uow *UnitOfWork, name string, out interfa
 		return db.Model(out).First(out, "username = ?", name).Error
 
 	case *model.Category:
+		fmt.Println("name:", out)
 		for _, association := range preloadAssociations {
 			db = db.Preload(association).Where("name = ?", name)
 		}
-		return db.Model(out).First(out, "name = ?", name).Error
+		return db.Model(out).First(out, "name = ? and user_id = ?", name, parentID).Error
 
 	default:
 		fmt.Println("In default")
 		for _, association := range preloadAssociations {
 			db = db.Preload(association).Where("name = ?", name)
 		}
-		return db.Model(out).First(out, "name = ?", name).Error
+		return db.Model(out).First(out, "name = ? and category_id = ?", name, parentID).Error
 	}
 }
 

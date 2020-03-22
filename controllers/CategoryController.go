@@ -64,12 +64,12 @@ func (cc *CategoryController) GetCategoryByID(w http.ResponseWriter, r *http.Req
 }
 
 func (cc *CategoryController) GetCategoryByName(w http.ResponseWriter, r *http.Request) {
-	_, err := ParseID(&w, r, "userid")
+	userID, err := ParseID(&w, r, "userid")
 	if err != nil {
 		return
 	}
 	category := model.Category{}
-	err = cc.CategoryService.GetCategoryByName(mux.Vars(r)["categoryname"], &category)
+	err = cc.CategoryService.GetCategoryByName(mux.Vars(r)["categoryname"], userID, &category)
 	if err != nil {
 		web.RespondError(&w, err)
 		return

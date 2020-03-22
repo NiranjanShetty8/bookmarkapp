@@ -30,7 +30,7 @@ func (us *UserService) Register(user *model.User) error {
 func (us *UserService) Login(user, actualUser *model.User) error {
 	uow := repository.NewUnitOfWork(us.DB, true)
 	// var actualUser *model.User
-	err := us.Repository.GetByName(uow, user.Username, actualUser,
+	err := us.Repository.GetByName(uow, user.Username, uuid.Nil, actualUser,
 		[]string{"Categories", "Categories.Bookmarks"})
 	// actualUser = out.(*model.User)
 	if err != nil {

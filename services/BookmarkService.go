@@ -59,10 +59,10 @@ func (bms *BookmarkService) UpdateBookmark(bookmark *model.Bookmark) error {
 	return err
 }
 
-func (bms *BookmarkService) GetBookmarkByName(bookmarkName string,
+func (bms *BookmarkService) GetBookmarkByName(bookmarkName string, categoryID uuid.UUID,
 	bookmark *model.Bookmark) error {
 	uow := repository.NewUnitOfWork(bms.DB, true)
-	err := bms.Repository.GetByName(uow, bookmarkName, bookmark, []string{})
+	err := bms.Repository.GetByName(uow, bookmarkName, categoryID, bookmark, []string{})
 	return err
 }
 

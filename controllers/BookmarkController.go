@@ -61,12 +61,13 @@ func (bmkController *BookmarkController) GetBookmarkByID(w http.ResponseWriter, 
 }
 
 func (bmkController *BookmarkController) GetBookmarkByName(w http.ResponseWriter, r *http.Request) {
-	_, err := ParseID(&w, r, "categoryid")
+	categoryID, err := ParseID(&w, r, "categoryid")
 	if err != nil {
 		return
 	}
 	bookmark := model.Bookmark{}
-	err = bmkController.BookmarkService.GetBookmarkByName(mux.Vars(r)["bookmarkname"], &bookmark)
+	err = bmkController.BookmarkService.GetBookmarkByName(mux.Vars(r)["bookmarkname"], categoryID,
+		&bookmark)
 	if err != nil {
 		web.RespondError(&w, err)
 		return
