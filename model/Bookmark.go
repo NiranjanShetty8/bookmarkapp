@@ -2,6 +2,7 @@ package model
 
 import uuid "github.com/satori/go.uuid"
 
+//Represents a bookmark
 type Bookmark struct {
 	Base
 	Name       string    `gorm:type:varchar(200)"`

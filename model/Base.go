@@ -6,6 +6,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+// A base type for tables which will have these columns
 type Base struct {
 	ID        uuid.UUID  `gorm:"type:varchar(36);primary_key;"`
 	CreatedAt time.Time  `gorm:"column:createdOn" json:"-"`

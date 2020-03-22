@@ -2,6 +2,7 @@ package model
 
 import uuid "github.com/satori/go.uuid"
 
+// Represents category
 type Category struct {
 	Base
 	Name      string     `gorm:"type:varchar(40)"`
