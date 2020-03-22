@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -18,6 +17,7 @@ type CategoryController struct {
 	CategoryService *services.CategoryService
 }
 
+// Registers routes in router
 func (cc *CategoryController) RegisterRoutes(router *mux.Router) {
 	subRouter := router.PathPrefix("/api/bookmarkapp/user/{userid}").Subrouter()
 	subRouter.Use(security.AuthMiddleWareFunc)
@@ -29,6 +29,7 @@ func (cc *CategoryController) RegisterRoutes(router *mux.Router) {
 	subRouter.HandleFunc("/category/{categoryid}", cc.DeleteCategory).Methods("DELETE")
 }
 
+// Gets all categories of user
 func (cc *CategoryController) GetAllCategories(w http.ResponseWriter, r *http.Request) {
 	uid, err := ParseID(&w, r, "userid")
 	if err != nil {
@@ -43,6 +44,7 @@ func (cc *CategoryController) GetAllCategories(w http.ResponseWriter, r *http.Re
 	web.RespondJSON(&w, http.StatusOK, categories)
 }
 
+// Gets category by ID
 func (cc *CategoryController) GetCategoryByID(w http.ResponseWriter, r *http.Request) {
 	userID, err := ParseID(&w, r, "userid")
 	if err != nil {
@@ -55,14 +57,13 @@ func (cc *CategoryController) GetCategoryByID(w http.ResponseWriter, r *http.Req
 	}
 	err = cc.CategoryService.GetCategory(userID, categoryID, &category)
 	if err != nil {
-		fmt.Print("controller error:", err)
 		web.RespondError(&w, err)
 		return
 	}
 	web.RespondJSON(&w, http.StatusOK, category)
-
 }
 
+// Gets Category by Name
 func (cc *CategoryController) GetCategoryByName(w http.ResponseWriter, r *http.Request) {
 	userID, err := ParseID(&w, r, "userid")
 	if err != nil {
@@ -75,9 +76,9 @@ func (cc *CategoryController) GetCategoryByName(w http.ResponseWriter, r *http.R
 		return
 	}
 	web.RespondJSON(&w, http.StatusOK, category)
-
 }
 
+// Adds a category
 func (cc *CategoryController) AddCategory(w http.ResponseWriter, r *http.Request) {
 	userID, err := ParseID(&w, r, "userid")
 	if err != nil {
@@ -103,6 +104,7 @@ func (cc *CategoryController) AddCategory(w http.ResponseWriter, r *http.Request
 	web.RespondJSON(&w, http.StatusOK, category.ID)
 }
 
+// Updates a category
 func (cc *CategoryController) UpdateCategory(w http.ResponseWriter, r *http.Request) {
 	userID, err := ParseID(&w, r, "userid")
 	if err != nil {
@@ -131,9 +133,9 @@ func (cc *CategoryController) UpdateCategory(w http.ResponseWriter, r *http.Requ
 		return
 	}
 	web.RespondJSON(&w, http.StatusOK, "Category Updated.")
-
 }
 
+// Deletes a category
 func (cc *CategoryController) DeleteCategory(w http.ResponseWriter, r *http.Request) {
 	userID, err := ParseID(&w, r, "userid")
 	if err != nil {
@@ -151,12 +153,14 @@ func (cc *CategoryController) DeleteCategory(w http.ResponseWriter, r *http.Requ
 	web.RespondJSON(&w, http.StatusOK, "Category Deleted.")
 }
 
+// Returns in instance of CategoryController
 func NewCategoryController(cs *services.CategoryService) *CategoryController {
 	return &CategoryController{
 		CategoryService: cs,
 	}
 }
 
+// Takes a map key of uuid using mux.Vars() and validates the uuid
 func ParseID(w *http.ResponseWriter, r *http.Request, mapKey string) (uuid.UUID, error) {
 	id := mux.Vars(r)[mapKey]
 	uid, err := uuid.FromString(id)
@@ -168,6 +172,7 @@ func ParseID(w *http.ResponseWriter, r *http.Request, mapKey string) (uuid.UUID,
 	return uid, err
 }
 
+// Category validation before adding it
 func validateCategory(category *model.Category) error {
 	name := strings.TrimSpace(category.Name)
 	if name == "" {
