@@ -1,8 +1,10 @@
 package security
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/NiranjanShetty8/bookmarkapp/web"
 	jwt "github.com/dgrijalva/jwt-go"
@@ -40,6 +42,13 @@ func AuthMiddleWareFunc(next http.Handler) http.Handler {
 				web.RespondError(&w, web.NewHTTPError(err.Error(), http.StatusForbidden))
 				return
 			}
+			floatSessionValue := claims["validTill"].(float64)
+			currentSession := int64(floatSessionValue)
+			if currentSession < time.Now().Unix() {
+				token.Valid = false
+				web.RespondError(&w, errors.New("Token expired. Please login again."))
+				return
+			}
 			userID, err = uuid.FromString(id)
 			if err != nil {
 				web.RespondError(&w, web.NewHTTPError(err.Error(), http.StatusForbidden))
@@ -55,9 +64,4 @@ func AuthMiddleWareFunc(next http.Handler) http.Handler {
 			web.RespondError(&w, web.NewHTTPError(err.Error(), http.StatusForbidden))
 		}
 	})
-}
-
-// To get the secret key
-func GetSecretKey() []byte {
-	return secretKey
 }

@@ -4,13 +4,11 @@ import (
 	"errors"
 	"net/http"
 	"strings"
-	"time"
 
 	"github.com/NiranjanShetty8/bookmarkapp/model"
 	"github.com/NiranjanShetty8/bookmarkapp/security"
 	"github.com/NiranjanShetty8/bookmarkapp/services"
 	"github.com/NiranjanShetty8/bookmarkapp/web"
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 )
 
@@ -72,7 +70,7 @@ func (uc *UserController) login(w http.ResponseWriter, r *http.Request) {
 		web.RespondError(&w, web.NewValidationError("mismatch", map[string]string{"error": err.Error()}))
 		return
 	}
-	uc.getToken(&actualUser, &w)
+	security.GetToken(&actualUser, &w)
 }
 
 // Does the actual validation
@@ -89,23 +87,6 @@ func (uc *UserController) validateUser(w http.ResponseWriter, user *model.User) 
 		return errors.New("Password should be 8 or more than 8 characters.")
 	}
 	return nil
-}
-
-// Responds with unique token after login
-func (uc *UserController) getToken(user *model.User, w *http.ResponseWriter) {
-	const session int64 = 600
-	claims := jwt.MapClaims{
-		"username": user.Username,
-		"userID":   user.ID,
-		"IssuedAt": time.Now().Unix() + session,
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(security.GetSecretKey())
-	if err != nil {
-		web.RespondError(w, web.NewValidationError("error", map[string]string{"error": err.Error()}))
-		return
-	}
-	web.RespondJSON(w, http.StatusOK, security.Response{Token: tokenString, User: *user})
 }
 
 // Registers routes in router
