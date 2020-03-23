@@ -12,7 +12,7 @@ type CategoryService struct {
 	Repository *repository.GormRepository
 }
 
-//Gets all categories for the specific user
+// Gets all categories for the specific user
 func (cs *CategoryService) GetAllCategories(uid uuid.UUID, categories *[]model.Category) error {
 	uow := repository.NewUnitOfWork(cs.DB, true)
 	err := cs.Repository.GetAll(uow, uid, categories, []string{"Bookmarks"})
@@ -26,7 +26,7 @@ func (cs *CategoryService) GetCategory(userID, categoryID uuid.UUID, category *m
 	return err
 }
 
-//Gets category by name for a specific user
+// Gets category by name for a specific user
 func (cs *CategoryService) GetCategoryByName(categoryName string, userID uuid.UUID,
 	category *model.Category) error {
 	uow := repository.NewUnitOfWork(cs.DB, true)
@@ -34,7 +34,7 @@ func (cs *CategoryService) GetCategoryByName(categoryName string, userID uuid.UU
 	return err
 }
 
-//Adds a new category for the specified user
+// Adds a new category for the specified user
 func (cs *CategoryService) AddCategory(category *model.Category) error {
 	uow := repository.NewUnitOfWork(cs.DB, false)
 	category.ID = uuid.NewV4()
@@ -47,10 +47,25 @@ func (cs *CategoryService) AddCategory(category *model.Category) error {
 	return err
 }
 
-//Deletes specific category
+// Deletes specific category
+// Cascade does not work on soft delete.
+// First we get the category bookmarks and delete them one by one
 func (cs *CategoryService) DeleteCategory(userId, categoryId uuid.UUID) error {
 	uow := repository.NewUnitOfWork(cs.DB, false)
-	err := cs.Repository.Delete(uow, userId, categoryId, &model.Category{})
+	category := model.Category{}
+	err := cs.GetCategory(userId, categoryId, &category)
+	if err != nil {
+		uow.Complete()
+		return err
+	}
+	for _, bookmark := range category.Bookmarks {
+		err = cs.Repository.Delete(uow, categoryId, bookmark.ID, model.Bookmark{})
+		if err != nil {
+			uow.Complete()
+			return err
+		}
+	}
+	err = cs.Repository.Delete(uow, userId, categoryId, &model.Category{})
 	if err != nil {
 		uow.Complete()
 		return err
@@ -59,7 +74,7 @@ func (cs *CategoryService) DeleteCategory(userId, categoryId uuid.UUID) error {
 	return err
 }
 
-//Updates specific category
+// Updates specific category
 func (cs *CategoryService) UpdateCategory(category *model.Category) error {
 	uow := repository.NewUnitOfWork(cs.DB, false)
 	err := cs.Repository.Update(uow, category)
@@ -71,7 +86,7 @@ func (cs *CategoryService) UpdateCategory(category *model.Category) error {
 	return err
 }
 
-//Returns instance of CategoryService
+// Returns instance of CategoryService
 func NewCategoryService(db *gorm.DB, repos *repository.GormRepository) *CategoryService {
 	db.AutoMigrate(&model.User{}, &model.Category{})
 	db.Model(&model.Category{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
