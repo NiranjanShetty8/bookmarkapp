@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"strconv"
 	"strings"
 
 	"github.com/NiranjanShetty8/bookmarkapp/model"
@@ -33,15 +34,27 @@ func (us *UserService) Login(user, actualUser *model.User) error {
 	uow := repository.NewUnitOfWork(us.DB, true)
 	err := us.Repository.GetByName(uow, user.Username, uuid.Nil, actualUser,
 		[]string{"Categories", "Categories.Bookmarks"})
+
 	if err != nil {
 		if strings.EqualFold(err.Error(), "Record not found") {
 			return errors.New("Incorrect Username")
 		}
 		return err
 	}
-	if user.Password != actualUser.Password {
-		return errors.New("Incorrect Password")
+	if actualUser.LoginAttempts == 1 {
+		return errors.New("Login attemps over. Account locked")
 	}
+	if user.Password != actualUser.Password {
+		actualUser.LoginAttempts--
+		us.Repository.Update(uow, actualUser)
+		if actualUser.LoginAttempts == 1 {
+			return errors.New("Login attemps over. Account locked")
+		}
+		attempts := strconv.Itoa(actualUser.LoginAttempts - 1)
+		return errors.New("Incorrect Password. Attempts remaining: " + attempts)
+	}
+	actualUser.LoginAttempts = model.GetLoginAttempts()
+	us.Repository.Update(uow, actualUser)
 	return err
 }
 

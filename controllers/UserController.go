@@ -50,6 +50,7 @@ func (uc *UserController) register(w http.ResponseWriter, r *http.Request) {
 
 // Handles validation,Authentication & Authorization of user
 func (uc *UserController) login(w http.ResponseWriter, r *http.Request) {
+
 	user := model.User{}
 	actualUser := model.User{}
 	err := web.UnmarshalJSON(r, &user)
@@ -66,8 +67,14 @@ func (uc *UserController) login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = uc.userService.Login(&user, &actualUser)
+	if actualUser.LoginAttempts == 1 {
+		web.RespondErrorMessage(&w, http.StatusForbidden, err.Error()+
+			" Please send an e-mail to niranjan@swabhavtechlabs.com for account unlock.")
+		return
+	}
 	if err != nil {
-		web.RespondError(&w, web.NewValidationError("mismatch", map[string]string{"error": err.Error()}))
+		web.RespondError(&w, web.NewValidationError("mismatch",
+			map[string]string{"error": err.Error()}))
 		return
 	}
 	security.GetToken(&actualUser, &w)
