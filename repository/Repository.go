@@ -141,6 +141,11 @@ func (repos *GormRepository) Update(uow *UnitOfWork, entity interface{}) error {
 	return uow.DB.Model(entity).Update(entity).Error
 }
 
+//Saves the specified record from a particular model
+func (repos *GormRepository) Save(uow *UnitOfWork, entity interface{}) error {
+	return uow.DB.Model(entity).Save(entity).Error
+}
+
 //NewGormRepository creates a new GormRepository
 func NewGormRepository() *GormRepository {
 	return &GormRepository{}

@@ -67,7 +67,7 @@ func (uc *UserController) login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = uc.userService.Login(&user, &actualUser)
-	if actualUser.LoginAttempts == 1 {
+	if actualUser.LoginAttempts == 0 {
 		web.RespondErrorMessage(&w, http.StatusForbidden, err.Error()+
 			" Please send an e-mail to niranjan@swabhavtechlabs.com for account unlock.")
 		return

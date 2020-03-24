@@ -41,20 +41,20 @@ func (us *UserService) Login(user, actualUser *model.User) error {
 		}
 		return err
 	}
-	if actualUser.LoginAttempts == 1 {
+	if actualUser.LoginAttempts == 0 {
 		return errors.New("Login attemps over. Account locked")
 	}
 	if user.Password != actualUser.Password {
 		actualUser.LoginAttempts--
-		us.Repository.Update(uow, actualUser)
-		if actualUser.LoginAttempts == 1 {
+		us.Repository.Save(uow, actualUser)
+		if actualUser.LoginAttempts == 0 {
 			return errors.New("Login attemps over. Account locked")
 		}
-		attempts := strconv.Itoa(actualUser.LoginAttempts - 1)
+		attempts := strconv.Itoa(actualUser.LoginAttempts)
 		return errors.New("Incorrect Password. Attempts remaining: " + attempts)
 	}
 	actualUser.LoginAttempts = model.GetLoginAttempts()
-	us.Repository.Update(uow, actualUser)
+	us.Repository.Save(uow, actualUser)
 	return err
 }
 
