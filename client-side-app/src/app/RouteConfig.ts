@@ -1,31 +1,31 @@
 import { Routes } from '@angular/router'
-import { HomeComponent } from './home/home.component'
-import { UserHomeComponent } from './user-home/user-home.component'
+import { HomeComponent } from './components/home/home.component'
+import { UserHomeComponent } from './components/user-home/user-home.component'
 
 export const routeArray: Routes = [
     {
         path: '',
         component: HomeComponent
     }, {
-        path: '/user/login',
+        path: 'user/login',
         component: HomeComponent
     }, {
-        path: '/user/register',
+        path: 'user/register',
         component: HomeComponent
     }, {
-        path: '/user/:uid',
+        path: 'user/:uid',
         component: UserHomeComponent
     }, {
-        path: '/user/:uid/category',
+        path: 'user/:uid/category',
         component: UserHomeComponent
     }, {
-        path: '/user/:uid/category/:cid',
+        path: 'user/:uid/category/:cid',
         component: UserHomeComponent
     }, {
-        path: '/user/:uid/category/:cid/bookmark',
+        path: 'user/:uid/category/:cid/bookmark',
         component: UserHomeComponent
     }, {
-        path: '/user/:uid/category/:cid/bookmark/:bid',
+        path: 'user/:uid/category/:cid/bookmark/:bid',
         component: UserHomeComponent
     }, {
         path: '**',
