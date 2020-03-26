@@ -8,8 +8,8 @@ const loginAttempts = 3
 // Represents the user
 type User struct {
 	Base
-	Username      string     `gorm:"unique;not null"`
-	Password      string     `gorm:"not null"`
+	Username      string     `gorm:"unique;not null" json:"username"`
+	Password      string     `gorm:"not null" json:"password"`
 	LoginAttempts int        `gorm:"type:integer(1);not null;DEFAULT:3" json:"-"`
 	Categories    []Category `json:"-"`
 }
