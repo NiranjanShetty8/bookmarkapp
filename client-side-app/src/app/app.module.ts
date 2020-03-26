@@ -15,6 +15,9 @@ import { AddBookmarkComponent } from './components/add-bookmark/add-bookmark.com
 import { EditBookmarkComponent } from './components/edit-bookmark/edit-bookmark.component';
 import { RouterModule } from '@angular/router';
 import { routeArray } from './RouteConfig';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+
 
 @NgModule({
   declarations: [
@@ -34,6 +37,9 @@ import { routeArray } from './RouteConfig';
     BrowserModule,
     NgbModule,
     RouterModule.forRoot(routeArray),
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
