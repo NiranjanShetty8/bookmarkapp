@@ -67,14 +67,15 @@ func (uc *UserController) login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = uc.userService.Login(&user, &actualUser)
-	if actualUser.LoginAttempts == 0 {
-		web.RespondErrorMessage(&w, http.StatusForbidden, err.Error()+
-			" Please send an e-mail to niranjan@swabhavtechlabs.com for account unlock.")
-		return
-	}
+
 	if err != nil {
 		web.RespondError(&w, web.NewValidationError("mismatch",
 			map[string]string{"error": err.Error()}))
+		return
+	}
+	if actualUser.LoginAttempts == 0 {
+		web.RespondErrorMessage(&w, http.StatusForbidden, err.Error()+
+			" Please send an e-mail to niranjan@swabhavtechlabs.com for account unlock.")
 		return
 	}
 	security.GetToken(&actualUser, &w)
