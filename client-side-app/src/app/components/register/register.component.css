@@ -1,0 +1,22 @@
+.validationError{
+    color: red;
+}
+
+.error {
+    color: red;
+}
+
+.success {
+    color: green;
+}
+
+#header1{
+}
+
+#header2{
+    /* font-size: xx-large; */
+}
+
+#header3{
+    /* font-size: x-large; */
+}

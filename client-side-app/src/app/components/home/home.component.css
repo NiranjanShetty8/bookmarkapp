@@ -1,0 +1,10 @@
+.registerPage{
+    position: fixed;
+    left:60%;
+    top: 25%;
+}
+.loginPage{
+    position: fixed;
+    left:50%;
+    top: 2%;
+}

@@ -1,1 +1,29 @@
-<p>login works!</p>
+<div class="container">
+    <h1> </h1>
+
+    <form [formGroup]="loginForm" class="form-inline">
+
+        <label for="username" class="control-label mb-2 mr-sm-2">Username</label>
+        <input required type="text" class="form-control mb-2 mr-sm-2" formControlName="username"
+            placeholder="Enter your name here">
+
+
+        <label for="password" class="control-label mb-2 mr-sm-2">Password</label>
+        <input required type="password" class="form-control mb-2 mr-sm-2" formControlName="password"
+            placeholder="Enter your password">
+
+
+
+        <input type="button" id="loginButton" class="btn btn-primary mb-2" value="Login" [disabled]="loading"
+            (click)="userLogin()" /><br />
+
+        <div *ngIf="errorOccurred" class="error">{{errorMessage}}</div>
+        <!-- <div class="validationError" *ngIf="loginForm.get('username').touched&&loginForm.get('username').invalid">
+            *Username should be 5-25 characters</div> &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
+        <div class="validationError" *ngIf="loginForm.get('password').touched&&loginForm.get('password').invalid">
+            *Password should be 8 or more characters </div><br /> -->
+
+
+    </form>
+
+</div>

@@ -7,25 +7,25 @@ export const routeArray: Routes = [
         path: '',
         component: HomeComponent
     }, {
-        path: 'user/login',
+        path: 'login',
         component: HomeComponent
     }, {
-        path: 'user/register',
+        path: 'register',
         component: HomeComponent
     }, {
-        path: 'user/:uid',
+        path: ':name/home',
         component: UserHomeComponent
     }, {
-        path: 'user/:uid/category',
+        path: 'userHome/category',
         component: UserHomeComponent
     }, {
-        path: 'user/:uid/category/:cid',
+        path: 'userHome/category/:cid',
         component: UserHomeComponent
     }, {
-        path: 'user/:uid/category/:cid/bookmark',
+        path: 'userHome/category/:cid/bookmark',
         component: UserHomeComponent
     }, {
-        path: 'user/:uid/category/:cid/bookmark/:bid',
+        path: 'userHome/category/:cid/bookmark/:bid',
         component: UserHomeComponent
     }, {
         path: '**',
