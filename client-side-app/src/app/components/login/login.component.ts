@@ -23,6 +23,8 @@ export class LoginComponent implements OnInit {
     this._service.login(this.user).subscribe((data: IUser) => {
       this.errorOccurred = false
       this.loading = false
+      sessionStorage.setItem('userid', data.id)
+      sessionStorage.setItem('token', data.token)
       this.loginForm.reset()
 
     }, (error) => {

@@ -1,10 +1,84 @@
-.registerPage{
-    position: fixed;
-    left:60%;
-    top: 25%;
+
+ 
+@media screen and (max-width: 620px) {
+  .registerPage {
+    /* color: red; */
+    position: absolute;
+    left:35%;
+    margin-top: 10%;
+    margin-left: -20%;
+  }
+  .loginPage{
+    position: absolute;
+    /* color: red; */
+    margin-left: -20%;
 }
-.loginPage{
-    position: fixed;
+}
+@media screen and (max-width: 1090px)and (min-width:620px) {
+  .registerPage {
+    /* color: purple; */
+    position: absolute;
+    left:35%;
+    margin-top: 8%;
+    margin-left: 0%;
+  }
+  .loginPage{
+    position: absolute;
+    /* color: red; */
+    margin-left: -17%;
+}
+.logo {
+  /* color: purple; */
+  margin-left: 0%;
+  font-size: 10px;
+}
+}
+@media screen and (max-width: 1200px)and (min-width:990px) {
+  .registerPage {
+    /* color: blue; */
+    position: absolute;
+    left:35%;
+    margin-top: 8%;
+    margin-left: 0%;
+  }
+  .loginPage{
+    position: absolute;
+    margin-left: 10%;
+}
+}
+@media screen and (max-width: 1600px) {
+  .registerPage {
+    position: absolute;
+    left:55%;
+    top: 20%;
+  }
+  .loginPage{
+    position: absolute;
     left:50%;
     top: 2%;
 }
+
+.logo {
+  position: relative;
+  min-height: 50px;
+  background-position: left;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  font-size: 30px;
+  font-style: italic;
+  font-stretch: extra-condensed;
+  color: steelblue;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+}
+
+
+.bgImage {
+    background-image: url("bookmarkImage.jfif");
+    min-height: 750px;
+    background-attachment: scroll;
+    background-position: left;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
