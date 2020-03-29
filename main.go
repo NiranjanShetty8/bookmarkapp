@@ -30,7 +30,7 @@ func main() {
 	fmt.Println("Server Started")
 	repos := repository.NewGormRepository()
 	initialize(db, repos, router)
-	headers := handlers.AllowedHeaders([]string{"Content-Type"})
+	headers := handlers.AllowedHeaders([]string{"Content-Type", "token"})
 	methods := handlers.AllowedMethods([]string{"POST", "GET", "PUT", "DELETE"})
 	origin := handlers.AllowedOrigins([]string{"*"})
 	server := &http.Server{
