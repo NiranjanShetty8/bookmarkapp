@@ -1,1 +1,29 @@
-<p>bookmark works!</p>
+<div class="container">
+    <h2>Search Bookmark</h2>
+    <p>Type in the name of the bookmark to filter results.</p>
+
+    <div class="row">
+        <div class="right">
+            <h2>Bookmarks</h2> <a href="#" class="btn btn-success a-btn-slide-text">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                <span><strong>Add</strong></span>
+            </a>
+
+            <input type="text" id="bookmarkSearch" placeholder="Search" title="Type in a bookmark name">
+            <ul id="bookmarkMenu" *ngFor="let bookmark of bookmarks">
+                <li *ngIf="bookmark.display" style="display: flex;"><a href="#"
+                        style="flex: 50%;"><strong>{{bookmark.name}}</strong></a>
+                    <a href="#" class="btn btn-primary a-btn-slide-text">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                        <span><strong>Edit</strong></span>
+                    </a>
+                    <a href="#" class="btn btn-danger a-btn-slide-text">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        <span><strong>Delete</strong></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</div>

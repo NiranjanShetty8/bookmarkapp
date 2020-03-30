@@ -1,0 +1,29 @@
+
+
+  
+  /* Create a column layout with Flexbox */
+  .row {
+    display: flex;
+    margin-left: 1%;
+  }
+  
+  .categoryPage {
+    flex: 20%;
+    padding: 15px 0;
+  }
+  
+  .categoryPage h2 {
+    padding-left: 8px;
+  }
+  
+  .bookmarkPage {
+    flex: 48%;
+    padding: 15px;
+    height: max-content;
+    margin-right: 5px;
+  }
+  
+*{
+    overflow-x: hidden;
+    max-width: 100%;
+}

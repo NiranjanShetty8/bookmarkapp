@@ -1,5 +1,29 @@
 <div class="container">
-    <ul *ngFor="let category of categories">
-        <li>{{category}}</li>
-    </ul>
+    <h2>Search Category</h2>
+    <p>Type in the name of the category to filter results.</p>
+    <div class="row">
+        <div class="left">
+            <h2>Categories </h2><a href="#" class="btn btn-success a-btn-slide-text">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                <span><strong>Add</strong></span>
+            </a>
+
+            <input type="text" id="mySearch" (keyup)="getSpecificCategories($event)" placeholder="Search"
+                title="Type in a category">
+            <ul id="myMenu" *ngFor="let category of categories">
+                <li *ngIf="category.display" style="display: flex;"><a href="#"
+                        style="flex: 50%;"><strong>{{category.name}}</strong></a>
+                    <a href="#" class="btn btn-primary a-btn-slide-text">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                        <span><strong>Edit</strong></span>
+                    </a>
+                    <a href="#" class="btn btn-danger a-btn-slide-text">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        <span><strong>Delete</strong></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
 </div>
