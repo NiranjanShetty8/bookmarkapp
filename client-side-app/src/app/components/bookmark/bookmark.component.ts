@@ -12,7 +12,19 @@ export class BookmarkComponent implements OnInit {
   errorMessage: string
   successMessage: string
   bookmark: IBookmark
+
   constructor(private _service: BookmarkService) { }
+
+  getAllBookmarksOfUser() {
+    this._service.getAllBookmarksOfUser().subscribe((data: IBookmark[]) => {
+      this.errorOccured = false
+      console.log("data", data)
+      this.bookmarks = data
+    }, (error) => {
+      this.errorOccured = true
+      this.errorMessage = error
+    });
+  }
 
   getAllBookmarks() {
     this._service.getAllBookmarks().subscribe((data: IBookmark[]) => {
@@ -78,6 +90,7 @@ export class BookmarkComponent implements OnInit {
     });
   }
   ngOnInit() {
+    this.getAllBookmarksOfUser()
   }
 
 }

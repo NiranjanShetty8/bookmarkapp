@@ -9,14 +9,28 @@ import { Observable } from 'rxjs';
 })
 export class BookmarkService {
   _baseURL: string
+  _allBookmarkURL: string
+
   constructor(private _http: HttpClient, private _router: Router) {
     this._baseURL = `${AppConstants.baseURL}/${sessionStorage.getItem("userid")}/category/\
     ${sessionStorage.getItem("categoryid")}`
+    this._allBookmarkURL = `${AppConstants.baseURL}/${sessionStorage.getItem("userid")}/bookmark/all`
   }
 
 
+  getAllBookmarksOfUser(): Observable<IBookmark[]> {
+    return new Observable<IBookmark[]>((observer) => {
+      this._http.get(this._allBookmarkURL, {
+        headers: this.setTokenToHeader()
+      }).subscribe((data: IBookmark[]) => {
+        observer.next(data)
+      }, (error) => {
+        observer.error(error.error)
+      })
+    })
+  }
+
   getAllBookmarks(): Observable<IBookmark[]> {
-    console.log(this.setTokenToHeader())
     return new Observable<IBookmark[]>((observer) => {
       this._http.get(this._baseURL, {
         headers: this.setTokenToHeader()
@@ -27,6 +41,7 @@ export class BookmarkService {
       })
     })
   }
+
 
   getBookmarkByName(bookmarkName: string): Observable<IBookmark> {
     return new Observable<IBookmark>((observer) => {

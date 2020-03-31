@@ -37,15 +37,12 @@
         <th>Delete</th>
     </tr>
     <tr>
-        <!-- <tr *ngFor="let bookmark of bookmarks"> -->
-        <td>google</td>
-        <td><a href="http://www.google.com">
-                <span><strong>www.google.com</strong></span></a></td>
-        <td>search</td>
-        <!-- <td>{{bookmark.name}}</td>
-        <td>{{bookmark.url}}</td> -->
-        <!-- <td>{{bookmark.categoryName}}</td> -->
-        <!-- <td><input id="editButton" type="button" routerLinkActive="active" [routerLink]="['/edit', student.id]"
+    <tr *ngFor="let bookmark of bookmarks">
+        <td><strong>{{bookmark.name}}</strong></td>
+        <td><a href="{{bookmark.url}}"><strong>{{bookmark.url}}</strong></a></td>
+        <td>Hello</td>
+        <!-- <td>{{bookmark.categoryName}}</td> 
+        <td><input id=" editButton" type="button" routerLinkActive="active" [routerLink]="['/edit', student.id]"
                 value=" Edit" class="btn btn-warning"></td>
         <td><input id="deleteButton" type="button" value="Delete" class="btn btn-danger"
                 (click)="deleteStudent(student.id)"></td> -->
