@@ -17,6 +17,9 @@ type BookmarkController struct {
 }
 
 func (bmkController *BookmarkController) RegisterRoutes(router *mux.Router) {
+	router.Use(security.AuthMiddleWareFunc)
+	router.HandleFunc("/api/bookmarkapp/user/{userid}/bookmark/all",
+		bmkController.GetAllBookmarksOfUser).Methods("GET")
 	subRouter := router.PathPrefix("/api/bookmarkapp/user/{userid}/category/{categoryid}").Subrouter()
 	subRouter.Use(security.AuthMiddleWareFunc)
 	subRouter.HandleFunc("/bookmark", bmkController.GetAllBookmarks).Methods("GET")
@@ -34,6 +37,32 @@ func (bmkController *BookmarkController) GetAllBookmarks(w http.ResponseWriter, 
 	}
 	bookmarks := []model.Bookmark{}
 	err = bmkController.BookmarkService.GetAllBookmarks(cid, &bookmarks)
+	if err != nil {
+		web.RespondError(&w, err)
+		return
+	}
+	web.RespondJSON(&w, http.StatusOK, bookmarks)
+}
+
+func (bmkController *BookmarkController) GetAllBookmarksOfUser(w http.ResponseWriter, r *http.Request) {
+	userID, err := ParseID(&w, r, "userid")
+	if err != nil {
+		return
+	}
+	tempArray := []model.Bookmark{}
+	bookmarks := []model.Bookmark{}
+	categories := []model.Category{}
+	csv := services.NewCategoryService(bmkController.BookmarkService.DB,
+		bmkController.BookmarkService.Repository)
+	err = csv.GetAllCategories(userID, &categories)
+	if err != nil {
+		web.RespondError(&w, err)
+		return
+	}
+	for _, category := range categories {
+		err = bmkController.BookmarkService.GetAllBookmarks(category.ID, &tempArray)
+		bookmarks = append(bookmarks, tempArray...)
+	}
 	if err != nil {
 		web.RespondError(&w, err)
 		return
