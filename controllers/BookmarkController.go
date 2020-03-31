@@ -17,8 +17,9 @@ type BookmarkController struct {
 }
 
 func (bmkController *BookmarkController) RegisterRoutes(router *mux.Router) {
-	router.Use(security.AuthMiddleWareFunc)
-	router.HandleFunc("/api/bookmarkapp/user/{userid}/bookmark/all",
+	subRoute := router.PathPrefix("/api/bookmarkapp/user/{userid}").Subrouter()
+	subRoute.Use(security.AuthMiddleWareFunc)
+	subRoute.HandleFunc("/bookmark/all",
 		bmkController.GetAllBookmarksOfUser).Methods("GET")
 	subRouter := router.PathPrefix("/api/bookmarkapp/user/{userid}/category/{categoryid}").Subrouter()
 	subRouter.Use(security.AuthMiddleWareFunc)
