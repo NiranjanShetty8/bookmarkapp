@@ -66,3 +66,19 @@ p{
         -moz-transition-duration: 0.5s;
         -o-transition-duration: 0.5s;
     }
+
+    table, th, td {
+      border: 1px solid slateblue;
+      border-collapse: collapse;
+      text-align: center;
+  
+    }
+    th, td {
+      padding: 5px;
+      text-align: center;
+    }
+    table#displayTable {
+      width: 100%;    
+      /* background-color: #f1f1c1; */
+      background-color: honeydew
+    }

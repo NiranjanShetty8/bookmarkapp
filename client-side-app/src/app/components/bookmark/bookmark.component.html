@@ -4,7 +4,7 @@
 
     <div class="row">
         <div class="right">
-            <h2>Bookmarks</h2> <a href="#" class="btn btn-success a-btn-slide-text">
+            <h2>Your Bookmarks</h2> <a href="#" class="btn btn-success a-btn-slide-text">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 <span><strong>Add</strong></span>
             </a>
@@ -27,3 +27,28 @@
 
     </div>
 </div>
+
+<table id="displayTable">
+    <tr>
+        <th>Name</th>
+        <th>URL</th>
+        <th>Category Name</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    <tr>
+        <!-- <tr *ngFor="let bookmark of bookmarks"> -->
+        <td>google</td>
+        <td><a href="http://www.google.com">
+                <span><strong>www.google.com</strong></span></a></td>
+        <td>search</td>
+        <!-- <td>{{bookmark.name}}</td>
+        <td>{{bookmark.url}}</td> -->
+        <!-- <td>{{bookmark.categoryName}}</td> -->
+        <!-- <td><input id="editButton" type="button" routerLinkActive="active" [routerLink]="['/edit', student.id]"
+                value=" Edit" class="btn btn-warning"></td>
+        <td><input id="deleteButton" type="button" value="Delete" class="btn btn-danger"
+                (click)="deleteStudent(student.id)"></td> -->
+
+    </tr>
+</table>

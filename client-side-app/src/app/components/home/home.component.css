@@ -38,7 +38,7 @@
   .loginPage{
     position: absolute;
     /* color: red; */
-    margin-left: -17%;
+    margin-left: -18%;
 }
 
 }
@@ -63,7 +63,7 @@
   }
   .loginPage{
     position: absolute;
-    left:50%;
+    left:48%;
     top: 2%;
 }
 
@@ -82,12 +82,4 @@
 }
 
 
-.bgImage {
-    background-image: url("bookmarkImage.jfif");
-    min-height: 750px;
-    background-attachment: scroll;
-    background-position: left;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
 
