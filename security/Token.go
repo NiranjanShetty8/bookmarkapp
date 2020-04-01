@@ -10,7 +10,7 @@ import (
 )
 
 //30 minute session
-const session int64 = 1800
+const session int64 = 1800000
 
 // Response is a representation of JSON response for JWT.
 type Response struct {

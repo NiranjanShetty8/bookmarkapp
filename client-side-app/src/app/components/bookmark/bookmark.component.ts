@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BookmarkService, IBookmark } from 'src/app/services/bookmark-service/bookmark.service';
+import { CategoryService } from 'src/app/services/category-service/category.service';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'bookmarkapp-bookmark',
@@ -13,16 +15,17 @@ export class BookmarkComponent implements OnInit {
   successMessage: string
   bookmark: IBookmark
 
-  constructor(private _service: BookmarkService) { }
+  constructor(private _service: BookmarkService, private categoryService: CategoryService) { }
 
   getAllBookmarksOfUser() {
     this._service.getAllBookmarksOfUser().subscribe((data: IBookmark[]) => {
       this.errorOccured = false
-      console.log("data", data)
       this.bookmarks = data
+      this.assignDisplayAndCategoryName()
     }, (error) => {
       this.errorOccured = true
       this.errorMessage = error
+      alert(error)
     });
   }
 
@@ -70,13 +73,15 @@ export class BookmarkComponent implements OnInit {
     })
   }
 
-  deleteBookmark(bookmarkID: string) {
-    this._service.deleteBookmark(bookmarkID).subscribe((data: string) => {
-      this.errorOccured = false
-      this.successMessage = data
+  deleteBookmark(categoryID, bookmarkID: string) {
+    if (!confirm("Are you sure you want to delete the bookmark?")) {
+      return
+    }
+    this._service.deleteBookmark(categoryID, bookmarkID).subscribe((data: string) => {
+      alert(data)
+      location.reload()
     }, (error) => {
-      this.errorOccured = true
-      this.errorMessage = error
+      alert(error)
     });
   }
 
@@ -89,6 +94,39 @@ export class BookmarkComponent implements OnInit {
       this.errorMessage = error
     });
   }
+
+  getSpecificBookmark(event: any) {
+    let name = event.target.value
+
+    if (name == "") {
+      for (let bookmark of this.bookmarks) {
+        bookmark.display = true
+      }
+      return
+    }
+    for (let bookmark of this.bookmarks) {
+      if (bookmark.name.indexOf(name) == -1) {
+        bookmark.display = false
+      } else {
+        bookmark.display = true
+      }
+    }
+  }
+
+  assignDisplayAndCategoryName() {
+    for (let bookmark of this.bookmarks) {
+      bookmark.display = true
+      this.categoryService.getCategoryName(bookmark.categoryID).subscribe((data: string) => {
+        this.errorOccured = false
+        bookmark.categoryName = data
+      }, (error) => {
+        this.errorOccured = true
+        this.errorMessage = error
+        alert(error)
+      })
+    }
+  }
+
   ngOnInit() {
     this.getAllBookmarksOfUser()
   }

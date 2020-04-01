@@ -51,6 +51,18 @@ export class CategoryService {
     })
   }
 
+  getCategoryName(categoryID: string): Observable<string> {
+    return new Observable<string>((observer) => {
+      this._http.get(`${this._baseURL}/${categoryID}`, {
+        headers: this.setTokenToHeader()
+      }).subscribe((data: ICategory) => {
+        observer.next(data.name)
+      }, (error) => {
+        observer.error(error.error)
+      })
+    })
+  }
+
   addCategory(category: ICategory): Observable<string> {
     console.log(this.setTokenToHeader())
     return new Observable<string>((observer) => {
@@ -89,8 +101,6 @@ export class CategoryService {
     })
 
   }
-
-
 
   setTokenToHeader(): HttpHeaders {
     return new HttpHeaders().set("token", sessionStorage.getItem("token"))

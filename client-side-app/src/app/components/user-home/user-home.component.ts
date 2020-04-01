@@ -9,6 +9,10 @@ export class UserHomeComponent implements OnInit {
 
   constructor() { }
 
+  test() {
+    console.log("Hello")
+  }
+
   ngOnInit() {
   }
 

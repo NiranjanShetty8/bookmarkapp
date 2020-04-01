@@ -3,27 +3,39 @@
     <p>Type in the name of the category to filter results.</p>
     <div class="row">
         <div class="left">
-            <h2>Your Categories </h2><a href="#" class="btn btn-success a-btn-slide-text">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                <span><strong>Add</strong></span>
-            </a>
+            <h2>Your Categories </h2>
+            <button class="btn btn-success a-btn-slide-text" (click)="addCategory()" data-target="#addCategoryModal"
+                data-toggle="modal">Add
+            </button>
 
             <input type="text" id="mySearch" (keyup)="getSpecificCategories($event)" placeholder="Search"
                 title="Type in a category">
             <ul id="myMenu" *ngFor="let category of categories">
                 <li *ngIf="category.display" style="display: flex;"><a href="#"
                         style="flex: 50%;"><strong>{{category.name}}</strong></a>
-                    <a href="#" class="btn btn-primary a-btn-slide-text">
-                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                        <span><strong>Edit</strong></span>
-                    </a>
-                    <a href="#" class="btn btn-danger a-btn-slide-text">
-                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                        <span><strong>Delete</strong></span>
-                    </a>
+                    <input type="button" class="btn btn-warning " value="Edit" (click)="updateCategory(category.id)">
+                    <input type="button" class="btn btn-danger " value="Delete" (click)="deleteCategory(category.id)">
                 </li>
             </ul>
         </div>
     </div>
 
+    <!-- MODAL CODE -->
+    <div class="modal" id="addCategoryModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal">&times</button>
+                    <h4 class="modal-title">Add Category</h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary">Add</button>
+                    <button class="btn btn-warning" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

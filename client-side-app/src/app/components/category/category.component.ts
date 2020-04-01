@@ -56,26 +56,35 @@ export class CategoryComponent implements OnInit {
     });
   }
 
-  addCategory(category: ICategory) {
-    this._service.addCategory(category).subscribe((data: string) => {
-      this.errorOccured = false
-      console.log(data)
-      this.successMessage = data
+  addCategory() {
+    // var category: ICategory;
+    // this._service.addCategory(category).subscribe((data: string) => {
+    //   this.errorOccured = false
+    //   console.log(data)
+    //   this.successMessage = data
 
-    }, (error) => {
-      this.errorOccured = true
-      this.errorMessage = error
-      console.log(error)
-    })
+    // }, (error) => {
+    //   this.errorOccured = true
+    //   this.errorMessage = error
+    //   console.log(error)
+    // })
+    console.log("hello")
   }
 
   deleteCategory(categoryID: string) {
+    if (!confirm("Warning! Deleting a Category will delete all the bookmarks in it.\
+    \nAre you sure you want to delete it?")) {
+      return
+    }
     this._service.deleteCategory(categoryID).subscribe((data: string) => {
       this.errorOccured = false
       this.successMessage = data
+      alert(data)
+      location.reload()
     }, (error) => {
       this.errorOccured = true
       this.errorMessage = error
+      alert(error)
     });
   }
 
@@ -91,14 +100,14 @@ export class CategoryComponent implements OnInit {
 
   getSpecificCategories(event: any) {
     let name = event.target.value
-    if (name = "") {
+    if (name == "") {
       for (let category of this.categories) {
         category.display = true
       }
       return
     }
     for (let category of this.categories) {
-      if (category.name.indexOf(event.target.value) == -1) {
+      if (category.name.indexOf(name) == -1) {
         category.display = false
       } else {
         category.display = true

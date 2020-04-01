@@ -12,8 +12,7 @@ export class BookmarkService {
   _allBookmarkURL: string
 
   constructor(private _http: HttpClient, private _router: Router) {
-    this._baseURL = `${AppConstants.baseURL}/${sessionStorage.getItem("userid")}/category/\
-    ${sessionStorage.getItem("categoryid")}`
+    this._baseURL = `${AppConstants.baseURL}/${sessionStorage.getItem("userid")}/category`
     this._allBookmarkURL = `${AppConstants.baseURL}/${sessionStorage.getItem("userid")}/bookmark/all`
   }
 
@@ -80,9 +79,9 @@ export class BookmarkService {
     })
   }
 
-  deleteBookmark(bookmarkID: string): Observable<string> {
+  deleteBookmark(categoryID, bookmarkID: string): Observable<string> {
     return new Observable<string>((observer) => {
-      this._http.delete(`${this._baseURL}/bookmark/${bookmarkID}`, {
+      this._http.delete(`${this._baseURL}/${categoryID}/bookmark/${bookmarkID}`, {
         headers: this.setTokenToHeader()
       }).subscribe((data: string) => {
         observer.next(data)
@@ -114,4 +113,6 @@ export interface IBookmark {
   name: string
   url: string
   categoryID: string
+  display?: boolean
+  categoryName?: string
 }

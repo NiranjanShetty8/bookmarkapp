@@ -50,13 +50,15 @@ p{
         background-color: #eee;
       }
 
-      a.btn:hover {
+      .btn:hover {
         -webkit-transform: scale(1.1);
         -moz-transform: scale(1.1);
         -o-transform: scale(1.1);
     }
-    a.btn {
+    .btn {
         display: inline-block;
+          /* font-style: oblique; */
+    font-weight: bolder;
         width: 100px;
         flex: 25%;
         -webkit-transform: scale(0.8);
