@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoryService, ICategory } from 'src/app/services/category-service/category.service';
-import { of } from 'rxjs';
-import { TestBed } from '@angular/core/testing';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'bookmarkapp-category',
@@ -14,14 +14,17 @@ export class CategoryComponent implements OnInit {
   errorMessage: string
   successMessage: string
   category: ICategory
+  categoryForm: FormGroup
+  formName: string
+  formOperationName: string
 
-  constructor(private _service: CategoryService) { }
+  constructor(private _service: CategoryService, private modalService: NgbModal) { }
+  closeResult = '';
+
 
   getAllCategories() {
-    console.log("called")
     this._service.getAllCategories().subscribe((data: ICategory[]) => {
       this.errorOccured = false
-      console.log("data", data)
       this.categories = data
       this.assignDisplayValue()
     }, (error) => {
@@ -57,18 +60,13 @@ export class CategoryComponent implements OnInit {
   }
 
   addCategory() {
-    // var category: ICategory;
-    // this._service.addCategory(category).subscribe((data: string) => {
-    //   this.errorOccured = false
-    //   console.log(data)
-    //   this.successMessage = data
-
-    // }, (error) => {
-    //   this.errorOccured = true
-    //   this.errorMessage = error
-    //   console.log(error)
-    // })
-    console.log("hello")
+    this.category = this.categoryForm.value
+    this._service.addCategory(this.category).subscribe((data: string) => {
+      alert(`Category added with ID: ${data}`)
+      location.reload()
+    }, (error) => {
+      alert(error)
+    })
   }
 
   deleteCategory(categoryID: string) {
@@ -89,12 +87,18 @@ export class CategoryComponent implements OnInit {
   }
 
   updateCategory(category: ICategory) {
-    this._service.updateCategory(category).subscribe((data: string) => {
-      this.errorOccured = false
-      this.successMessage = data
+    console.log(category)
+    this.category = this.categoryForm.value
+    if (this.category.name === category.name) {
+      alert("Name has not been changed.")
+      return
+    }
+    this._service.updateCategory(this.category).subscribe((data: string) => {
+      alert("Category Updated")
+      location.reload()
     }, (error) => {
-      this.errorOccured = true
-      this.errorMessage = error
+      // if (error.toString() == "" )
+      alert(error)
     });
   }
 
@@ -115,8 +119,38 @@ export class CategoryComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-    this.getAllCategories()
+
+  openModal(content: any, category?: ICategory) {
+    if (category) {
+      this.formName = "Edit Category";
+      this.formOperationName = "Save Changes"
+      this.categoryForm.setValue(category)
+      this.modalService.open(content, { ariaLabelledBy: 'category-modal' }).result.then((result) => {
+        this.updateCategory(category)
+      }, () => void 0);
+      return
+    }
+    this.formName = "Add Category";
+    this.formOperationName = "Add Category"
+    this.categoryForm.reset()
+    this.modalService.open(content, { ariaLabelledBy: 'category-modal' }).result.then((result) => {
+      this.addCategory()
+    }, () => void 0);
   }
 
+  ngOnInit() {
+    this.getAllCategories()
+    this.initAddForm()
+  }
+
+  private initAddForm() {
+    this.categoryForm = new FormGroup({
+      id: new FormControl(null),
+      name: new FormControl(null, [Validators.required, Validators.minLength(3), Validators.maxLength(30)]),
+      bookmarks: new FormControl(null),
+      userID: new FormControl(null),
+      display: new FormControl(null)
+
+    })
+  }
 }

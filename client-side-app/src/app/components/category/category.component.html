@@ -4,16 +4,14 @@
     <div class="row">
         <div class="left">
             <h2>Your Categories </h2>
-            <button class="btn btn-success a-btn-slide-text" (click)="addCategory()" data-target="#addCategoryModal"
-                data-toggle="modal">Add
-            </button>
+            <input type="button" class="btn btn-success a-btn-slide-text" value="Add" (click)="openModal(content)">
 
             <input type="text" id="mySearch" (keyup)="getSpecificCategories($event)" placeholder="Search"
                 title="Type in a category">
             <ul id="myMenu" *ngFor="let category of categories">
                 <li *ngIf="category.display" style="display: flex;"><a href="#"
                         style="flex: 50%;"><strong>{{category.name}}</strong></a>
-                    <input type="button" class="btn btn-warning " value="Edit" (click)="updateCategory(category.id)">
+                    <input type="button" class="btn btn-warning " value="Edit" (click)="openModal(content,category)">
                     <input type="button" class="btn btn-danger " value="Delete" (click)="deleteCategory(category.id)">
                 </li>
             </ul>
@@ -21,21 +19,29 @@
     </div>
 
     <!-- MODAL CODE -->
-    <div class="modal" id="addCategoryModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button class="close" data-dismiss="modal">&times</button>
-                    <h4 class="modal-title">Add Category</h4>
-                </div>
-                <div class="modal-body">
-
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary">Add</button>
-                    <button class="btn btn-warning" data-dismiss="modal">Cancel</button>
-                </div>
-            </div>
+    <ng-template #content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="category-model">{{formName}}</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
-    </div>
-</div>
+        <div class="modal-body">
+            <form [formGroup]="categoryForm" class="needs-validation">
+                <div class="validationError" *ngIf="categoryForm.pristine&&!categoryForm.valid">
+                    *{{formOperationName}} button will be enabled after you provide proper values to fields
+                </div>
+
+                <label for="name" class="control-label"><strong>Name</strong></label>
+                <input required type="text" class="form-control" formControlName="name"
+                    placeholder="Enter category name here">
+
+                <div class="validationError" *ngIf="categoryForm.get('name').touched&&categoryForm.get('name').invalid">
+                    *Name should be in between 3-30 characters</div><br />
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success" (click)="modal.close()"
+                [disabled]="!categoryForm.get('name').dirty||!categoryForm.valid">{{formOperationName}}</button>
+        </div>
+    </ng-template>

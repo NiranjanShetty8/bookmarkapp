@@ -29,9 +29,9 @@ export class BookmarkService {
     })
   }
 
-  getAllBookmarks(): Observable<IBookmark[]> {
+  getAllBookmarks(categoryID: string): Observable<IBookmark[]> {
     return new Observable<IBookmark[]>((observer) => {
-      this._http.get(this._baseURL, {
+      this._http.get(`${this._baseURL}/${categoryID}`, {
         headers: this.setTokenToHeader()
       }).subscribe((data: IBookmark[]) => {
         observer.next(data)
@@ -42,9 +42,9 @@ export class BookmarkService {
   }
 
 
-  getBookmarkByName(bookmarkName: string): Observable<IBookmark> {
+  getBookmarkByName(categoryID, bookmarkName: string): Observable<IBookmark> {
     return new Observable<IBookmark>((observer) => {
-      this._http.get(`${this._baseURL}/bookmark/name/${bookmarkName}`, {
+      this._http.get(`${this._baseURL}/${categoryID}/bookmark/name/${bookmarkName}`, {
         headers: this.setTokenToHeader()
       }).subscribe((data: IBookmark) => {
         observer.next(data)
@@ -54,9 +54,9 @@ export class BookmarkService {
     })
   }
 
-  getBookmarkByID(bookmarkID: string): Observable<IBookmark> {
+  getBookmarkByID(categoryID, bookmarkID: string): Observable<IBookmark> {
     return new Observable<IBookmark>((observer) => {
-      this._http.get(`${this._baseURL}/bookmark/${bookmarkID}`, {
+      this._http.get(`${this._baseURL}/${categoryID}/bookmark/${bookmarkID}`, {
         headers: this.setTokenToHeader()
       }).subscribe((data: IBookmark) => {
         observer.next(data)
@@ -66,9 +66,9 @@ export class BookmarkService {
     })
   }
 
-  addBookmark(bookmark: IBookmark): Observable<string> {
+  addBookmark(categoryID, bookmark: IBookmark): Observable<string> {
     return new Observable<string>((observer) => {
-      this._http.post(this._baseURL, bookmark, {
+      this._http.post(`${this._baseURL}/${categoryID}`, bookmark, {
         headers: this.setTokenToHeader()
       }).subscribe((data: string) => {
         console.log(data)
@@ -93,7 +93,7 @@ export class BookmarkService {
 
   updateBookmark(bookmark: IBookmark): Observable<string> {
     return new Observable<string>((observer) => {
-      this._http.put(`${this._baseURL}/bookmark/${bookmark.id}`, bookmark, {
+      this._http.put(`${this._baseURL}/${bookmark.categoryID}/bookmark/${bookmark.id}`, bookmark, {
         headers: this.setTokenToHeader()
       }).subscribe((data: string) => {
         observer.next(data)

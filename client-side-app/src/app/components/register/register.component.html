@@ -8,7 +8,7 @@
         <label for="username" class="control-label">Username</label>
         <input required type="text" class="form-control" formControlName="username" placeholder="Enter your name here">
         <div class="validationError" *ngIf="registerForm.get('username').touched&&registerForm.get('username').invalid">
-            *Username should be 5-25 characters</div><br />
+            *Username should be 5-30 characters</div><br />
 
         <label for="password" class="control-label">Password</label>
         <input required type="password" class="form-control" formControlName="password"

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { BookmarkService, IBookmark } from 'src/app/services/bookmark-service/bookmark.service';
 import { CategoryService } from 'src/app/services/category-service/category.service';
-import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'bookmarkapp-bookmark',
@@ -14,8 +15,13 @@ export class BookmarkComponent implements OnInit {
   errorMessage: string
   successMessage: string
   bookmark: IBookmark
+  bookmarkForm: FormGroup
+  formName: string
+  formOperationName: string
 
-  constructor(private _service: BookmarkService, private categoryService: CategoryService) { }
+
+  constructor(private _service: BookmarkService,
+    private categoryService: CategoryService, private modalService: NgbModal) { }
 
   getAllBookmarksOfUser() {
     this._service.getAllBookmarksOfUser().subscribe((data: IBookmark[]) => {
@@ -29,8 +35,8 @@ export class BookmarkComponent implements OnInit {
     });
   }
 
-  getAllBookmarks() {
-    this._service.getAllBookmarks().subscribe((data: IBookmark[]) => {
+  getAllBookmarks(categoryID: string) {
+    this._service.getAllBookmarks(categoryID).subscribe((data: IBookmark[]) => {
       this.errorOccured = false
       console.log("data", data)
       this.bookmarks = data
@@ -40,8 +46,8 @@ export class BookmarkComponent implements OnInit {
     });
   }
 
-  getBookmarkByName(bookmarkName: string) {
-    this._service.getBookmarkByName(bookmarkName).subscribe((data: IBookmark) => {
+  getBookmarkByName(categoryID, bookmarkName: string) {
+    this._service.getBookmarkByName(categoryID, bookmarkName).subscribe((data: IBookmark) => {
       this.errorOccured = false
       this.bookmark = data
     }, (error) => {
@@ -50,8 +56,8 @@ export class BookmarkComponent implements OnInit {
     });
   }
 
-  getBookmarkByID(bookmarkID: string) {
-    this._service.getBookmarkByID(bookmarkID).subscribe((data: IBookmark) => {
+  getBookmarkByID(categoryID, bookmarkID: string) {
+    this._service.getBookmarkByID(categoryID, bookmarkID).subscribe((data: IBookmark) => {
       this.errorOccured = false
       this.bookmark = data
     }, (error) => {
@@ -60,16 +66,12 @@ export class BookmarkComponent implements OnInit {
     });
   }
 
-  addBookmark(bookmark: IBookmark) {
-    this._service.addBookmark(bookmark).subscribe((data: string) => {
-      this.errorOccured = false
-      console.log(data)
-      this.successMessage = data
-
+  addBookmark(categoryID: string) {
+    this.bookmark = this.bookmarkForm.value
+    this._service.addBookmark(categoryID, this.bookmark).subscribe((data: string) => {
+      alert(`Bookmark Added with ID ${data}`)
     }, (error) => {
-      this.errorOccured = true
-      this.errorMessage = error
-      console.log(error)
+      alert(error)
     })
   }
 
@@ -86,12 +88,17 @@ export class BookmarkComponent implements OnInit {
   }
 
   updateBookmark(bookmark: IBookmark) {
-    this._service.updateBookmark(bookmark).subscribe((data: string) => {
-      this.errorOccured = false
-      this.successMessage = data
+    this.bookmark = this.bookmarkForm.value
+    if (this.bookmark.name === bookmark.name && this.bookmark.url === bookmark.url &&
+      this.bookmark.categoryID === bookmark.categoryID) {
+      alert("No changes made to book mark.");
+      return
+    }
+    this._service.updateBookmark(this.bookmark).subscribe((data: string) => {
+      alert(data)
+      location.reload()
     }, (error) => {
-      this.errorOccured = true
-      this.errorMessage = error
+      alert(error)
     });
   }
 
@@ -127,8 +134,41 @@ export class BookmarkComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-    this.getAllBookmarksOfUser()
+  openModal(content: any, catgeoryID?: string, bookmark?: IBookmark) {
+    if (bookmark) {
+      this.formName = "Edit Bookmark";
+      this.formOperationName = "Save Changes"
+      this.bookmarkForm.setValue(bookmark)
+      this.modalService.open(content, { ariaLabelledBy: 'bookmark-modal' }).result.then((result) => {
+        console.log("calling update")
+        this.updateBookmark(bookmark)
+      }, () => {
+        this.bookmarkForm.reset()
+      });
+      return
+    }
+    this.formName = "Add Bookmark";
+    this.formOperationName = "Add Bookmark"
+    this.bookmarkForm.reset()
+    this.modalService.open(content, { ariaLabelledBy: 'bookmark-modal' }).result.then((result) => {
+      this.addBookmark(catgeoryID)
+    }, () => void 0);
   }
 
+  ngOnInit() {
+    this.getAllBookmarksOfUser()
+    this.initAddForm()
+  }
+
+  private initAddForm() {
+    this.bookmarkForm = new FormGroup({
+      id: new FormControl(null),
+      name: new FormControl(null, [Validators.required, Validators.minLength(3), Validators.maxLength(30)]),
+      url: new FormControl(null, [Validators.required, Validators.minLength(8)]),
+      categoryID: new FormControl(null),
+      display: new FormControl(null),
+      categoryName: new FormControl(null)
+
+    })
+  }
 }

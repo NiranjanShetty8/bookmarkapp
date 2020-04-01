@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService, IUser } from 'src/app/services/user-service/user.service';
-import { FormControl, FormGroup, Validators, AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, RequiredValidator } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'bookmarkapp-register',
@@ -71,7 +71,7 @@ export class RegisterComponent implements OnInit {
   private initForm() {
     this.registerForm = new FormGroup({
       username: new FormControl(null,
-        [Validators.required, Validators.minLength(5), Validators.maxLength(25)]),
+        [Validators.required, Validators.minLength(5), Validators.maxLength(30)]),
       password: new FormControl(null, [Validators.required, Validators.minLength(8)]),
       confirmPassword: new FormControl(null, [Validators.required])
     });

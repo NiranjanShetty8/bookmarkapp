@@ -4,10 +4,8 @@
 
     <div class="row">
         <div class="right">
-            <h2>Your Bookmarks</h2> <a href="#" class="btn btn-success a-btn-slide-text">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                <span><strong>Add</strong></span>
-            </a>
+            <h2>Your Bookmarks</h2> <input type="button" class="btn btn-success a-btn-slide-text"
+                (click)="openModal(content)" value="Add">
 
             <input type="text" id="bookmarkSearch" (keyup)="getSpecificBookmark($event)" placeholder="Search"
                 title="Type in a bookmark name">
@@ -24,7 +22,8 @@
                     <td *ngIf="bookmark.display"><a href={{bookmark.url}}><strong>{{bookmark.url}}</strong></a></td>
                     <td *ngIf="bookmark.display"><strong>{{bookmark.categoryName}}</strong></td>
                     <td *ngIf="bookmark.display">
-                        <input id=" editButton" type="button" value=" Edit" class="btn btn-warning"></td>
+                        <input id=" editButton" type="button" value=" Edit" class="btn btn-warning"
+                            (click)="openModal(content,bookmark.categoryID,bookmark)"></td>
                     <td *ngIf="bookmark.display">
                         <input id="deleteButton" type="button" value="Delete" class="btn btn-danger"
                             (click)="deleteBookmark(bookmark.categoryID,bookmark.id)"></td>
@@ -35,3 +34,34 @@
 
     </div>
 </div>
+
+<!-- MODAL CODE -->
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="bookmark-model">{{formName}}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="bookmarkForm" class="needs-validation">
+            <div class="validationError" *ngIf="bookmarkForm.pristine">
+                *{{formOperationName}} button will be enabled after you provide proper values to fields
+            </div>
+
+            <label for="name" class="control-label"><strong>Name</strong></label>
+            <input required type="text" class="form-control" formControlName="name"
+                placeholder="Enter Bookmark name here">
+            <div class="validationError" *ngIf="bookmarkForm.get('name').touched&&bookmarkForm.get('name').invalid">
+                *Name should be in between 3-30 characters</div><br />
+            <label for="url" class="control-label"><strong>URL</strong></label>
+            <input required type="text" class="form-control" formControlName="url" placeholder="Enter URL here">
+            <div class="validationError" *ngIf="bookmarkForm.get('url').touched&&bookmarkForm.get('url').invalid">
+                *URL should be more than 8 characters</div><br />
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="modal.close()"
+            [disabled]="!bookmarkForm.valid||!bookmarkForm.dirty">{{formOperationName}}</button>
+    </div>
+</ng-template>

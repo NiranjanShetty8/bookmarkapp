@@ -84,3 +84,7 @@ p{
       /* background-color: #f1f1c1; */
       background-color: honeydew
     }
+
+    .validationError{
+      color: red;
+  }
