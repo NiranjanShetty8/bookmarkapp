@@ -1,4 +1,7 @@
 <div class="container col-lg-12 col-md-6 col-sm-6">
+    <div *ngIf="loading" class="backDrop">
+        <div class="spinner"></div>
+    </div>
     <h1> </h1>
 
     <form [formGroup]="loginForm" class="form-inline">

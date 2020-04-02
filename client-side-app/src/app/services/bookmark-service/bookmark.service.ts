@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AppConstants } from 'src/app/Constants';
 import { Observable } from 'rxjs';
+import { ICategory } from '../category-service/category.service';
 
 @Injectable({
   providedIn: 'root'
@@ -33,8 +34,8 @@ export class BookmarkService {
     return new Observable<IBookmark[]>((observer) => {
       this._http.get(`${this._baseURL}/${categoryID}`, {
         headers: this.setTokenToHeader()
-      }).subscribe((data: IBookmark[]) => {
-        observer.next(data)
+      }).subscribe((data: ICategory) => {
+        observer.next(data.bookmarks)
       }, (error) => {
         observer.error(error.error)
       })
@@ -66,12 +67,11 @@ export class BookmarkService {
     })
   }
 
-  addBookmark(categoryID, bookmark: IBookmark): Observable<string> {
+  addBookmark(bookmark: IBookmark): Observable<string> {
     return new Observable<string>((observer) => {
-      this._http.post(`${this._baseURL}/${categoryID}`, bookmark, {
+      this._http.post(`${this._baseURL}/${bookmark.categoryID}/bookmark`, bookmark, {
         headers: this.setTokenToHeader()
       }).subscribe((data: string) => {
-        console.log(data)
         observer.next(data)
       }, (error) => {
         observer.error(error.error)

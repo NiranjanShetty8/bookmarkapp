@@ -10,13 +10,39 @@
     color: green;
 }
 
-#header1{
-}
+.btn:hover:enabled {
+    -webkit-transform: scale(1.01);
+    -moz-transform: scale(1.01);
+    -o-transform: scale(1.01);
+  }
+  
+  .btn:disabled {
+    cursor: not-allowed;
+  }
+  
+  .btn {
+    display: inline-block;
+    font-style: oblique;
+    font-weight: bolder;
+    width: 100px;
+    flex: 25%;
+    -webkit-transform: scale(0.8);
+    -moz-transform: scale(0.8);
+    -o-transform: scale(0.8);
+    -webkit-transition-duration: 0.5s;
+    -moz-transition-duration: 0.5s;
+    -o-transition-duration: 0.5s;
+  }
 
-#header2{
-    /* font-size: xx-large; */
-}
-
-#header3{
-    /* font-size: x-large; */
-}
+    
+.spinner {
+    border : 14px solid silver;
+    border-top : 12px solid #337ab7;
+    border-radius: 50%;
+    width : 80px;
+    height : 80px;
+    animation: spin 700ms linear infinite;
+    top : 50%;
+    left: 45%;
+    position: absolute;
+  }

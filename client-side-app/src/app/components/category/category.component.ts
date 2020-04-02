@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CategoryService, ICategory } from 'src/app/services/category-service/category.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router, NavigationEnd, NavigationStart } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'bookmarkapp-category',
@@ -10,26 +12,29 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 })
 export class CategoryComponent implements OnInit {
   categories: ICategory[]
-  errorOccured: boolean
-  errorMessage: string
-  successMessage: string
   category: ICategory
   categoryForm: FormGroup
   formName: string
   formOperationName: string
+  formMessage: string
+  userName: string
+  userHomeLink: string
+  loading: boolean
 
-  constructor(private _service: CategoryService, private modalService: NgbModal) { }
-  closeResult = '';
+  constructor(private _service: CategoryService, private modalService: NgbModal,
+    private location: Location) {
+  }
 
 
   getAllCategories() {
+    this.loading = true
     this._service.getAllCategories().subscribe((data: ICategory[]) => {
-      this.errorOccured = false
       this.categories = data
       this.assignDisplayValue()
+      this.loading = false
     }, (error) => {
-      this.errorOccured = true
-      this.errorMessage = error
+      this.loading = false
+      alert(error)
     });
   }
 
@@ -40,31 +45,36 @@ export class CategoryComponent implements OnInit {
   }
 
   getCategoryByName(categoryName: string) {
+    this.loading = true
     this._service.getCategoryByName(categoryName).subscribe((data: ICategory) => {
-      this.errorOccured = false
       this.category = data
+      this.loading = false
     }, (error) => {
-      this.errorOccured = true
-      this.errorMessage = error
+      this.loading = false
+      alert(error)
     });
   }
 
   getCategoryByID(categoryID: string) {
+    this.loading = true
     this._service.getCategoryByID(categoryID).subscribe((data: ICategory) => {
-      this.errorOccured = false
       this.category = data
+      this.loading = false
     }, (error) => {
-      this.errorOccured = true
-      this.errorMessage = error
+      this.loading = false
+      alert(error)
     });
   }
 
   addCategory() {
+    this.loading = true
     this.category = this.categoryForm.value
     this._service.addCategory(this.category).subscribe((data: string) => {
+      this.loading = false
       alert(`Category added with ID: ${data}`)
       location.reload()
     }, (error) => {
+      this.loading = false
       alert(error)
     })
   }
@@ -74,30 +84,30 @@ export class CategoryComponent implements OnInit {
     \nAre you sure you want to delete it?")) {
       return
     }
+    this.loading = true
     this._service.deleteCategory(categoryID).subscribe((data: string) => {
-      this.errorOccured = false
-      this.successMessage = data
+      this.loading = false
       alert(data)
       location.reload()
     }, (error) => {
-      this.errorOccured = true
-      this.errorMessage = error
+      this.loading = false
       alert(error)
     });
   }
 
   updateCategory(category: ICategory) {
-    console.log(category)
     this.category = this.categoryForm.value
     if (this.category.name === category.name) {
       alert("Name has not been changed.")
       return
     }
+    this.loading = true
     this._service.updateCategory(this.category).subscribe((data: string) => {
+      this.loading = false
       alert("Category Updated")
       location.reload()
     }, (error) => {
-      // if (error.toString() == "" )
+      this.loading = false
       alert(error)
     });
   }
@@ -119,19 +129,26 @@ export class CategoryComponent implements OnInit {
     }
   }
 
+  showBookmarksOfSpecificCAtegory(categoryID: string) {
+    this.location.replaceState(`${this.userHomeLink}/category/${categoryID}`)
+  }
 
   openModal(content: any, category?: ICategory) {
     if (category) {
       this.formName = "Edit Category";
       this.formOperationName = "Save Changes"
+      this.formMessage = "you make some valid changes to fields."
       this.categoryForm.setValue(category)
       this.modalService.open(content, { ariaLabelledBy: 'category-modal' }).result.then((result) => {
         this.updateCategory(category)
-      }, () => void 0);
+      }, () => {
+        this.categoryForm.reset()
+      });
       return
     }
     this.formName = "Add Category";
     this.formOperationName = "Add Category"
+    this.formMessage = "you fill all fields with valid data."
     this.categoryForm.reset()
     this.modalService.open(content, { ariaLabelledBy: 'category-modal' }).result.then((result) => {
       this.addCategory()
@@ -139,8 +156,10 @@ export class CategoryComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.userHomeLink = `${sessionStorage.getItem("username")}/home`
     this.getAllCategories()
     this.initAddForm()
+
   }
 
   private initAddForm() {

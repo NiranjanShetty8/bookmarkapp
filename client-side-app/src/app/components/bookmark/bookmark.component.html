@@ -1,11 +1,17 @@
 <div class="container">
+    <div *ngIf="loading" class="backDrop">
+        <div class="spinner"></div>
+    </div>
     <h2>Search Bookmark</h2>
     <p>Type in the name of the bookmark to filter results.</p>
 
     <div class="row">
+
         <div class="right">
-            <h2>Your Bookmarks</h2> <input type="button" class="btn btn-success a-btn-slide-text"
-                (click)="openModal(content)" value="Add">
+            <h2>Your Bookmarks</h2>
+            <input type="button" class="btn btn-primary a-btn-slide-text" (click)="getAllBookmarksOfUser()"
+                value="Show All">
+            <input type="button" class="btn btn-success a-btn-slide-text" (click)="openModal(content)" value="Add">
 
             <input type="text" id="bookmarkSearch" (keyup)="getSpecificBookmark($event)" placeholder="Search"
                 title="Type in a bookmark name">
@@ -33,35 +39,45 @@
         </div>
 
     </div>
+
+    <!-- MODAL CODE -->
+    <ng-template #content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="bookmark-model">{{formName}}</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="bookmarkForm" class="needs-validation">
+                <div class="validationError" *ngIf="bookmarkForm.pristine||bookmarkForm.invalid">
+                    *{{formOperationName}} button will be enabled after {{formMessage}}
+                </div>
+
+                <label for="name" class="control-label"><strong>Name</strong></label>
+                <input required type="text" class="form-control" formControlName="name"
+                    placeholder="Enter Bookmark name here">
+                <div class="validationError" *ngIf="bookmarkForm.get('name').touched&&bookmarkForm.get('name').invalid">
+                    *Name should be in between 3-30 characters</div><br />
+
+                <label for="url" class="control-label"><strong>URL</strong></label>
+                <input required type="text" class="form-control" formControlName="url" placeholder="Enter URL here">
+                <div class="validationError" *ngIf="bookmarkForm.get('url').touched&&bookmarkForm.get('url').invalid">
+                    *URL should be more than 8 characters</div><br />
+
+                <label for="categoryName" class="control-label"><strong>Category Name</strong></label>&nbsp;
+                <select class="form-control" formControlName="categoryName">
+                    <option *ngFor=" let categoryName of allCategoryNames" [ngValue]="categoryName">{{categoryName}}
+                    </option>
+                </select>
+                <div class="validationError"
+                    *ngIf="bookmarkForm.get('categoryName').pristine&&bookmarkForm.get('categoryName').invalid">
+                    *Choose a category</div><br />
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success" (click)="modal.close()"
+                [disabled]="!bookmarkForm.valid||!bookmarkForm.dirty">{{formOperationName}}</button>
+        </div>
+    </ng-template>
 </div>
-
-<!-- MODAL CODE -->
-<ng-template #content let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title" id="bookmark-model">{{formName}}</h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <form [formGroup]="bookmarkForm" class="needs-validation">
-            <div class="validationError" *ngIf="bookmarkForm.pristine">
-                *{{formOperationName}} button will be enabled after you provide proper values to fields
-            </div>
-
-            <label for="name" class="control-label"><strong>Name</strong></label>
-            <input required type="text" class="form-control" formControlName="name"
-                placeholder="Enter Bookmark name here">
-            <div class="validationError" *ngIf="bookmarkForm.get('name').touched&&bookmarkForm.get('name').invalid">
-                *Name should be in between 3-30 characters</div><br />
-            <label for="url" class="control-label"><strong>URL</strong></label>
-            <input required type="text" class="form-control" formControlName="url" placeholder="Enter URL here">
-            <div class="validationError" *ngIf="bookmarkForm.get('url').touched&&bookmarkForm.get('url').invalid">
-                *URL should be more than 8 characters</div><br />
-        </form>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-success" (click)="modal.close()"
-            [disabled]="!bookmarkForm.valid||!bookmarkForm.dirty">{{formOperationName}}</button>
-    </div>
-</ng-template>

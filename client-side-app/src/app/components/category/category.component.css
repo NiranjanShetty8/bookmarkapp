@@ -1,7 +1,7 @@
-.btn:hover {
-    -webkit-transform: scale(1.1);
-    -moz-transform: scale(1.1);
-    -o-transform: scale(1.1);
+.btn:hover:enabled {
+    -webkit-transform: scale(1.01);
+    -moz-transform: scale(1.01);
+    -o-transform: scale(1.01);
 }
 .btn {
     display: inline-block;
@@ -15,6 +15,10 @@
     -webkit-transition-duration: 0.5s;
     -moz-transition-duration: 0.5s;
     -o-transition-duration: 0.5s;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
 }
 
 .btn-success {
@@ -93,4 +97,16 @@ li{
 
   .validationError{
     color: red;
+}
+
+.spinner {
+  border : 14px solid silver;
+  border-top : 12px solid #337ab7;
+  border-radius: 50%;
+  width : 80px;
+  height : 80px;
+  animation: spin 700ms linear infinite;
+  top : 50%;
+  left: 45%;
+  position: absolute;
 }

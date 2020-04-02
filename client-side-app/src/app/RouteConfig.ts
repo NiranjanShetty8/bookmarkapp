@@ -16,16 +16,7 @@ export const routeArray: Routes = [
         path: ':name/home',
         component: UserHomeComponent
     }, {
-        path: 'userHome/category',
-        component: UserHomeComponent
-    }, {
-        path: 'userHome/category/:cid',
-        component: UserHomeComponent
-    }, {
-        path: 'userHome/category/:cid/bookmark',
-        component: UserHomeComponent
-    }, {
-        path: 'userHome/category/:cid/bookmark/:bid',
+        path: ':name/home/category/:categoryID',
         component: UserHomeComponent
     }, {
         path: '**',

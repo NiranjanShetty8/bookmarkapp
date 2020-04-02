@@ -24,6 +24,7 @@ export class LoginComponent implements OnInit {
       this.errorOccurred = false
       this.loading = false
       sessionStorage.setItem('userid', data.id)
+      sessionStorage.setItem('username', data.username)
       sessionStorage.setItem('token', data.token)
       this.loginForm.reset()
 

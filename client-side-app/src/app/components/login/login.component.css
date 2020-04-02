@@ -5,3 +5,35 @@
 .error {
     color: red;
 }
+
+.btn:hover:enabled {
+    -webkit-transform: scale(1.01);
+    -moz-transform: scale(1.01);
+    -o-transform: scale(1.01);
+  }
+  
+.btn:disabled {
+    cursor: not-allowed;
+  }
+  
+.btn {
+    display: inline-block;
+    -webkit-transform: scale(0.8);
+    -moz-transform: scale(0.8);
+    -o-transform: scale(0.8);
+    -webkit-transition-duration: 0.5s;
+    -moz-transition-duration: 0.5s;
+    -o-transition-duration: 0.5s;
+  }
+    
+.spinner {
+    border : 14px solid silver;
+    border-top : 12px solid #337ab7;
+    border-radius: 50%;
+    width : 80px;
+    height : 80px;
+    animation: spin 700ms linear infinite;
+    top : 50%;
+    left: 25%;
+    position: absolute;
+  }
