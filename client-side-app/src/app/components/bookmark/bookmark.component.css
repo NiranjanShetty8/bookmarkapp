@@ -108,7 +108,7 @@ table#displayTable {
   border-radius: 50%;
   width : 80px;
   height : 80px;
-  animation: spin 700ms linear infinite;
+  -webkit-animation: spin 700ms linear infinite;
   top : 50%;
   left: 45%;
   position: absolute;

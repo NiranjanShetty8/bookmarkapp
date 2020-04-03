@@ -44,6 +44,7 @@ export class BookmarkComponent implements OnInit {
       this.loading = false
 
     }, (error) => {
+      console.log("Here")
       this.loading = false
       alert(error)
     });
@@ -95,7 +96,7 @@ export class BookmarkComponent implements OnInit {
     this._service.addBookmark(this.bookmark).subscribe((data: string) => {
       this.loading = false
       alert(`Bookmark Added with ID ${data}`)
-      location.reload()
+      this.getAllBookmarksOfUser()
 
     }, (error) => {
       this.loading = false
@@ -111,7 +112,7 @@ export class BookmarkComponent implements OnInit {
     this._service.deleteBookmark(categoryID, bookmarkID).subscribe((data: string) => {
       this.loading = false
       alert(data)
-      location.reload()
+      this.getAllBookmarksOfUser()
     }, (error) => {
       this.loading = false
       alert(error)
@@ -136,7 +137,7 @@ export class BookmarkComponent implements OnInit {
     this._service.updateBookmark(this.bookmark).subscribe((data: string) => {
       this.loading = false
       alert(data)
-      location.reload()
+      this.getAllBookmarksOfUser()
     }, (error) => {
       this.loading = false
       alert(error)

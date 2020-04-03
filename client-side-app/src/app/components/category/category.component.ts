@@ -4,6 +4,7 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { Location } from '@angular/common';
+import { BookmarkComponent } from '../bookmark/bookmark.component';
 
 @Component({
   selector: 'bookmarkapp-category',
@@ -21,7 +22,8 @@ export class CategoryComponent implements OnInit {
   userHomeLink: string
   loading: boolean
 
-  constructor(private _service: CategoryService, private modalService: NgbModal,
+  constructor(private _service: CategoryService,
+    private modalService: NgbModal,
     private location: Location) {
   }
 
@@ -72,7 +74,7 @@ export class CategoryComponent implements OnInit {
     this._service.addCategory(this.category).subscribe((data: string) => {
       this.loading = false
       alert(`Category added with ID: ${data}`)
-      location.reload()
+      this.getAllCategories()
     }, (error) => {
       this.loading = false
       alert(error)
@@ -88,7 +90,6 @@ export class CategoryComponent implements OnInit {
     this._service.deleteCategory(categoryID).subscribe((data: string) => {
       this.loading = false
       alert(data)
-      location.reload()
     }, (error) => {
       this.loading = false
       alert(error)
@@ -105,7 +106,8 @@ export class CategoryComponent implements OnInit {
     this._service.updateCategory(this.category).subscribe((data: string) => {
       this.loading = false
       alert("Category Updated")
-      location.reload()
+      this.getAllCategories()
+      // this.bkc.getAllBookmarksOfUser()
     }, (error) => {
       this.loading = false
       alert(error)

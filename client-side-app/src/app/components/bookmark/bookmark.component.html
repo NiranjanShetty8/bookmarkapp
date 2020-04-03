@@ -25,7 +25,8 @@
                 </tr>
                 <tr *ngFor="let bookmark of bookmarks">
                     <td *ngIf="bookmark.display"><strong>{{bookmark.name}}</strong></td>
-                    <td *ngIf="bookmark.display"><a href={{bookmark.url}}><strong>{{bookmark.url}}</strong></a></td>
+                    <td *ngIf="bookmark.display"><a href={{bookmark.url}}
+                            target="_blank"><strong>{{bookmark.url}}</strong></a></td>
                     <td *ngIf="bookmark.display"><strong>{{bookmark.categoryName}}</strong></td>
                     <td *ngIf="bookmark.display">
                         <input id=" editButton" type="button" value=" Edit" class="btn btn-warning"

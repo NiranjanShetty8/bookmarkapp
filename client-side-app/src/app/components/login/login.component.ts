@@ -36,6 +36,9 @@ export class LoginComponent implements OnInit {
       if (this.errorString.startsWith("mismatch: Incorrect Username", 0)) {
         this.errorMessage = "Incorrect Username. New User? Register first!"
         return
+      } else if (this.errorString.startsWith("[object ", 0)) {
+        this.errorMessage = "*Check internet connection"
+        return
       }
       this.errorMessage = error
 

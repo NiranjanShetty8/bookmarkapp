@@ -17,8 +17,8 @@
 
 
 
-        <input type="button" id="loginButton" class="btn btn-primary mb-2" value="Login" [disabled]="loading"
-            (click)="userLogin()" /><br>
+        <input type="button" id="loginButton" class="btn btn-primary mb-2" value="Login"
+            [disabled]="loading||!loginForm.dirty" (click)="userLogin()" /><br>
 
 
         <!-- <div class="validationError" *ngIf="loginForm.get('username').touched&&loginForm.get('username').invalid">
