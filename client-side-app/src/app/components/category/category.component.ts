@@ -89,6 +89,8 @@ export class CategoryComponent implements OnInit {
     this.loading = true
     this._service.deleteCategory(categoryID).subscribe((data: string) => {
       this.loading = false
+      this.getAllCategories()
+      this._service.callGetAllBookmarks()
       alert(data)
     }, (error) => {
       this.loading = false
@@ -105,9 +107,9 @@ export class CategoryComponent implements OnInit {
     this.loading = true
     this._service.updateCategory(this.category).subscribe((data: string) => {
       this.loading = false
-      alert("Category Updated")
       this.getAllCategories()
-      // this.bkc.getAllBookmarksOfUser()
+      this._service.callGetAllBookmarks()
+      alert("Category Updated")
     }, (error) => {
       this.loading = false
       alert(error)

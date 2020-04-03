@@ -3,16 +3,21 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AppConstants } from 'src/app/Constants';
 import { IBookmark } from '../bookmark-service/bookmark.service';
-import { Observable, observable } from 'rxjs';
+import { Observable, observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
+  invokeEvent: Subject<boolean> = new Subject();
   _baseURL: string
 
   constructor(private _http: HttpClient, private _route: Router) {
     this._baseURL = `${AppConstants.baseURL}/${sessionStorage.getItem("userid")}/category`
+  }
+
+  callGetAllBookmarks() {
+    this.invokeEvent.next(true)
   }
 
   getAllCategories(): Observable<ICategory[]> {

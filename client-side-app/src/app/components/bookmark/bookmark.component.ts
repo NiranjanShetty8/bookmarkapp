@@ -25,6 +25,11 @@ export class BookmarkComponent implements OnInit {
 
   constructor(private _service: BookmarkService,
     private categoryService: CategoryService, private modalService: NgbModal, private location: Location) {
+    this.categoryService.invokeEvent.subscribe((value) => {
+      if (value) {
+        this.getAllBookmarksOfUser()
+      }
+    })
     location.onUrlChange((urlChanged) => {
       var categoryID = (urlChanged.split("category/", 2)[1])
       if (location.path() != this.userHomeLink) {
