@@ -60,7 +60,7 @@ type Repository interface {
 type GormRepository struct{}
 
 //GetAll gets all the records of the model specified
-func (repos *GormRepository) GetAll(uow *UnitOfWork, uid uuid.UUID, out interface{},
+func (repos *GormRepository) GetAll(uow *UnitOfWork, parentId uuid.UUID, out interface{},
 	preloadAssociations []string) error {
 	db := uow.DB
 	for _, association := range preloadAssociations {
@@ -70,9 +70,9 @@ func (repos *GormRepository) GetAll(uow *UnitOfWork, uid uuid.UUID, out interfac
 	case *[]model.User:
 		return db.Model(out).Find(out).Error
 	case *[]model.Category:
-		return db.Model(out).Find(out, "user_id = ?", uid).Error
+		return db.Model(out).Find(out, "user_id = ?", parentId).Error
 	default:
-		return db.Model(out).Find(out, "category_id = ?", uid).Error
+		return db.Model(out).Find(out, "category_id = ?", parentId).Error
 	}
 }
 
@@ -128,7 +128,7 @@ func (repos *GormRepository) Delete(uow *UnitOfWork, parentID,
 	childID uuid.UUID, value interface{}) error {
 	switch value.(type) {
 	case *model.User:
-		return uow.DB.Model(value).Delete(value, "id = ?", parentID).Error
+		return uow.DB.Model(value).Delete(value, "id = ?", childID).Error
 	case *model.Category:
 		return uow.DB.Model(value).Delete(value, "user_id = ? AND id = ?", parentID, childID).Error
 	default:

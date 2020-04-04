@@ -37,6 +37,6 @@ func RespondError(w *http.ResponseWriter, err error) {
 		httpError := err.(*HTTPError)
 		RespondErrorMessage(w, httpError.HTTPStatus, httpError.ErrorKey)
 	default:
-		RespondErrorMessage(w, http.StatusInternalServerError, err.Error())
+		RespondErrorMessage(w, http.StatusNotAcceptable, err.Error())
 	}
 }

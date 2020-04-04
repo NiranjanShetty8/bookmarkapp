@@ -108,6 +108,7 @@ func (cc *CategoryController) AddCategory(w http.ResponseWriter, r *http.Request
 func (cc *CategoryController) UpdateCategory(w http.ResponseWriter, r *http.Request) {
 	userID, err := ParseID(&w, r, "userid")
 	if err != nil {
+		web.RespondError(&w, err)
 		return
 	}
 	category := model.Category{}
@@ -123,6 +124,7 @@ func (cc *CategoryController) UpdateCategory(w http.ResponseWriter, r *http.Requ
 	}
 	catergoryID, err := ParseID(&w, r, "categoryid")
 	if err != nil {
+		web.RespondError(&w, err)
 		return
 	}
 	category.ID = catergoryID

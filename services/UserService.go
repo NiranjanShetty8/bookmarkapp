@@ -58,6 +58,17 @@ func (us *UserService) Login(user, actualUser *model.User) error {
 	return err
 }
 
+func (us *UserService) UpdateUser(user *model.User) error {
+	uow := repository.NewUnitOfWork(us.DB, false)
+	err := us.Repository.Update(uow, user)
+	if err != nil {
+		uow.Complete()
+		return err
+	}
+	uow.Commit()
+	return err
+}
+
 //Returns instance of UserService
 func NewUserService(db *gorm.DB, repos *repository.GormRepository) *UserService {
 	db.AutoMigrate(&model.User{}, &model.Category{}, &model.Bookmark{})

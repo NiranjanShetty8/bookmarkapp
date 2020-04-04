@@ -65,14 +65,17 @@ func main() {
 
 // Create instance of services & controllers & register routes
 func initialize(db *gorm.DB, repos *repository.GormRepository, router *mux.Router) {
+	superUserService := services.NewSuperUserService(db, repos)
 	userService := services.NewUserService(db, repos)
 	categoryService := services.NewCategoryService(db, repos)
 	bookmarkService := services.NewBookmarkService(db, repos)
 
+	superUserController := controllers.NewSuperUserController(superUserService)
 	userController := controllers.NewUserController(userService)
 	categoryController := controllers.NewCategoryController(categoryService)
 	bookmarkController := controllers.NewBookmarkController(bookmarkService)
 
+	superUserController.RegisterRoutes(router)
 	userController.RegisterRoutes(router)
 	categoryController.RegisterRoutes(router)
 	bookmarkController.RegisterRoutes(router)
