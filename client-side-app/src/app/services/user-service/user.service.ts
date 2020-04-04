@@ -3,10 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { AppConstants } from '../../Constants'
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { ICategory } from '../category-service/category.service';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class UserService {
 
   _baseURL: string
@@ -47,5 +49,9 @@ export interface IUser {
   id?: string,
   username: string,
   password: string,
+  email?: string,
+  profilePhoto?: any,
+  superUser: boolean,
+  categories?: ICategory,
   token?: string
 }

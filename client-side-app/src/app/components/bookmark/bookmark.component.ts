@@ -32,14 +32,11 @@ export class BookmarkComponent implements OnInit {
     })
     location.onUrlChange((urlChanged) => {
       var categoryID = (urlChanged.split("category/", 2)[1])
-      if (location.path() != this.userHomeLink) {
+      if (location.path().startsWith(`${this.userHomeLink}/category`)) {
         this.getAllBookmarks(categoryID)
       }
     })
   }
-
-
-
   getAllBookmarksOfUser() {
     this.loading = true
     this.location.replaceState(this.userHomeLink)

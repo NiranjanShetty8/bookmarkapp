@@ -11,19 +11,24 @@
         <label for="username" class="control-label">Username</label>
         <input required type="text" class="form-control" formControlName="username" placeholder="Enter your name here">
         <div class="validationError" *ngIf="registerForm.get('username').touched&&registerForm.get('username').invalid">
-            *Username should be 5-30 characters</div><br />
+            *Username should be 5-30 characters</div>
 
         <label for="password" class="control-label">Password</label>
         <input required type="password" class="form-control" formControlName="password"
             (ngModelChange)="passwordMatch()" placeholder="Enter your password">
         <div class="validationError" *ngIf="registerForm.get('password').touched&&registerForm.get('password').invalid">
-            *Password should be 8 or more characters </div><br />
+            *Password should be 8 or more characters </div>
 
         <label for="confirmPassword" class="control-label">Confirm Password</label>
         <input required type="password" class="form-control" formControlName="confirmPassword"
             (ngModelChange)="passwordMatch()" placeholder="Retype your password">
         <div class="validationError" *ngIf="!match">*Passwords
             do no match</div>
+
+        <label for="email" class="control-label">Email</label>
+        <input required type="email" class="form-control" formControlName="email" placeholder="Enter your E-mail">
+        <div class="validationError" *ngIf="registerForm.get('email').touched&&registerForm.get('email').invalid">
+            *Please enter a valid e-mail </div>
 
         <div *ngIf="errorOccurred" class="error">{{errorMessage}}</div><br />
         <input type="button" id="registerButton" class="btn btn-success" value="Register"

@@ -1,30 +1,40 @@
-<div class="container col-lg-12 col-md-6 col-sm-6">
+<div class="container col-md-12 ">
     <div *ngIf="loading" class="backDrop">
         <div class="spinner"></div>
     </div>
-    <h1> </h1>
 
-    <form [formGroup]="loginForm" class="form-inline">
+    <h1 id="loginHeader"><strong>Login</strong></h1>
 
-        <label for="username" class="control-label mb-2 mr-sm-2">Username</label>
-        <input required type="text" class="form-control mb-2 mr-sm-2" formControlName="username"
-            placeholder="Enter username">
+    <form [formGroup]="loginForm" class="needs-validation">
+        <div class="row">
+            <div class="col">
+                <label for=" username" class="control-label"><strong>Username</strong></label>
+            </div>
+            <div class="col" id="userName">
+                <input required type="text" class="form-control" formControlName="username"
+                    placeholder="Enter username">
+            </div>
+        </div>
+        <div class="validationError" *ngIf="loginForm.get('username').touched&&loginForm.get('username').invalid">
+            *Username should be 5-25 characters</div> <br />
 
+        <div class="row">
+            <div class="col">
+                <label for="password" class="control-label"><strong>Password</strong></label><br />
+            </div>
+            <div class="col" id="userName">
+                <input required type="password" class="form-control" formControlName="password"
+                    placeholder="Enter password">
+            </div>
+        </div>
 
-        <label for="password" class="control-label mb-2 mr-sm-2">Password</label>
-        <input required type="password" class="form-control mb-2 mr-sm-2" formControlName="password"
-            placeholder="Enter password">
-
-
-
-        <input type="button" id="loginButton" class="btn btn-primary mb-2" value="Login"
-            [disabled]="loading||!loginForm.dirty" (click)="userLogin()" /><br>
-
-
-        <!-- <div class="validationError" *ngIf="loginForm.get('username').touched&&loginForm.get('username').invalid">
-            *Username should be 5-25 characters</div> &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
         <div class="validationError" *ngIf="loginForm.get('password').touched&&loginForm.get('password').invalid">
-            *Password should be 8 or more characters </div><br /> -->
+            *Password should be 8 or more characters </div><br />
+
+        <input type="button" id="loginButton" class="btn btn-primary" value="Login"
+            [disabled]="loading||!loginForm.dirty||loginForm.invalid" (click)="userLogin()" /><br>
+
+
 
 
     </form>

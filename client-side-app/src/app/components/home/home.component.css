@@ -1,81 +1,24 @@
-
- 
-@media screen and (max-width: 620px) {
-  .registerPage {
-    color: red;
-    position: absolute;
-    left:35%;
-    margin-left: -40%;
-    margin-top: 150%;
-  }
-  .loginPage{
-    position: absolute;
-    /* color: red; */
-    margin-left: -40%;
-    margin-top: 115%;
-}
-.logo {
-  /* color: purple; */
-  margin-left: 0%;
-  height: 1mm;
-  width: 1mm;
-}
-.whyUs{
-  color: red;
-  height: 3px;
-  width: 3px;
-  display:none;
-}
-}
-@media screen and (max-width: 1090px)and (min-width:620px) {
-  .registerPage {
-    /* color: purple; */
-    position: absolute;
-    left:35%;
-    margin-top: 8%;
-    margin-left: 0%;
-  }
-  .loginPage{
-    position: absolute;
-    /* color: red; */
-    margin-left: -18%;
-}
-
-}
-@media screen and (max-width: 1200px)and (min-width:990px) {
-  .registerPage {
-    /* color: blue; */
-    position: absolute;
-    left:35%;
-    margin-top: 8%;
-    margin-left: 0%;
-  }
-  .loginPage{
-    position: absolute;
-    margin-left: 10%;
-}
-}
+                      /* @media screen and (max-width: 1200px)and (min-width:990px) { */
 @media screen and (max-width: 1600px) {
   .registerPage {
-    position: absolute;
-    left:55%;
-    top: 20%;
+    float: right;
+    margin-right: 5%;
+    margin-top: 2%;
   }
   .loginPage{
-    position: absolute;
-    left:48%;
-    top: 2%;
+    float: left;
 }
-
+.whyUs{
+  margin-top: 7%;
+  float: left;
+  min-width: 40%;
+}
 .logo {
-  position: relative;
-  min-height: 50px;
+  position: absolute;
   background-position: left;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  font-size: 30px;
   font-style: italic;
-  font-stretch: extra-condensed;
   color: steelblue;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
