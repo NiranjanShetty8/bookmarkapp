@@ -11,7 +11,7 @@ type User struct {
 	Email          string      `gorm:"unique;type:varchar(40)" json:"email,omitempty"`
 	ProfilePicture interface{} `gorm:"type:mediumblob" json:"profilePicture"`
 	SuperUser      bool        `gorm:"type:varchar(5);DEFAULT:'FALSE'" json:"superUser,boolean"`
-	LoginAttempts  int         `gorm:"type:integer(1);not null;DEFAULT:3" json:"-"`
+	LoginAttempts  int         `gorm:"type:integer(1);not null;DEFAULT:3" json:"loginAttempts"`
 	Categories     []Category  `json:"categories"`
 }
 
