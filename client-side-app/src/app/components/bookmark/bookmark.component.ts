@@ -46,7 +46,6 @@ export class BookmarkComponent implements OnInit {
       this.loading = false
 
     }, (error) => {
-      console.log("Here")
       this.loading = false
       alert(error)
     });

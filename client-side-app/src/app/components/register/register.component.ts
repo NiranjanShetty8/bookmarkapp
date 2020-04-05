@@ -34,7 +34,7 @@ export class RegisterComponent implements OnInit {
     this._service.register(this.user).subscribe((data: string) => {
       this.loading = false
       this.errorOccurred = false
-      this.successMessage = `Hello ${this.user.username}, Your account has been created with ID:${data}
+      this.successMessage = `Hello ${this.user.username}, Your account has been created.
       Please Login to proceed.`
       this.registerForm.reset()
 

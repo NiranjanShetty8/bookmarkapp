@@ -16,7 +16,8 @@ import { EditBookmarkComponent } from './components/edit-bookmark/edit-bookmark.
 import { RouterModule } from '@angular/router';
 import { routeArray } from './RouteConfig';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AdminHomeComponent } from './components/admin-home/admin-home.component'
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
     AddCategoryComponent,
     EditCategoryComponent,
     AddBookmarkComponent,
-    EditBookmarkComponent
+    EditBookmarkComponent,
+    AdminHomeComponent
   ],
   imports: [
     BrowserModule,

@@ -1,4 +1,4 @@
-<div class="container col-md-12 ">
+<div class="container">
     <div *ngIf="loading" class="backDrop">
         <div class="spinner"></div>
     </div>
@@ -31,13 +31,10 @@
         <div class="validationError" *ngIf="loginForm.get('password').touched&&loginForm.get('password').invalid">
             *Password should be 8 or more characters </div><br />
 
+        <div *ngIf="errorOccurred" class="error">{{errorMessage}}</div>
+
         <input type="button" id="loginButton" class="btn btn-primary" value="Login"
             [disabled]="loading||!loginForm.dirty||loginForm.invalid" (click)="userLogin()" /><br>
-
-
-
-
     </form>
-    <div *ngIf="errorOccurred" class="error">{{errorMessage}}</div>
 
 </div>

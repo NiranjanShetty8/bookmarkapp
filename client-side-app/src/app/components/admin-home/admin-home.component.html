@@ -1,0 +1,22 @@
+<table id="displayTable">
+    <tr>
+        <th>Name</th>
+        <th>Password</th>
+        <th>Email</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    <tr *ngFor="let user of allUsers">
+        <td><a href="{{user.username}}/home" target="_blank"><strong>{{user.username}}</strong></a></td>
+        <td><strong>{{user.password}}</strong></td>
+        <td><strong>{{user.email}}</strong></td>
+        <td>
+            <input *ngIf="user.loginAttempts==0" id="unlockButton" type="button" value="Unlock" class="btn btn-warning"
+                (click)="unlockAccount(user)">
+        </td>
+        <td>
+            <input id="deleteButton" type="button" value="Delete" class="btn btn-danger" (click)="deleteUser(user.id)">
+        </td>
+
+    </tr>
+</table>
