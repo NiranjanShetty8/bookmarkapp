@@ -41,9 +41,9 @@ export class AdminService {
   }
 
   unlockUser(user: IUser): Observable<string> {
-    user.loginAttempts = this.loginAttempts
     return new Observable<string>((observer) => {
-      this._http.put(`${this._baseURL}/${user.id}`, {
+      user.loginAttempts = this.loginAttempts
+      this._http.put(`${this._baseURL}/${user.id}`, user, {
         headers: this.setTokenToHeader()
       }).subscribe((data: string) => {
         observer.next(data)

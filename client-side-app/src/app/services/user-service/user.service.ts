@@ -73,6 +73,7 @@ export interface IUser {
   loginAttempts?: number,
   profilePhoto?: any,
   superUser: boolean,
-  categories?: ICategory,
-  token?: string
+  categories?: ICategory[],
+  token?: string,
+  display?: boolean
 }

@@ -125,7 +125,8 @@ export class CategoryComponent implements OnInit {
       return
     }
     for (let category of this.categories) {
-      if (category.name.indexOf(name) == -1) {
+      let actualName = category.name.toLowerCase()
+      if (actualName.indexOf(name) == -1) {
         category.display = false
       } else {
         category.display = true

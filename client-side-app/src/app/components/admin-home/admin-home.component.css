@@ -32,3 +32,29 @@
     background-color: #f1f1c1;
   }
   
+  .btn:disabled {
+    cursor: not-allowed;
+  }
+
+  #mySearch {
+    width: 100%;
+    font-size: 18px;
+    padding: 11px;
+    border: 1px solid #ddd;
+  }
+
+  h1{
+    text-align: center;
+  }
+
+  #hyperLinkButton {
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    /*optional*/
+    font-family: arial, sans-serif;
+    /*input has OS specific font-family*/
+    color: #069;
+    text-decoration: underline;
+    cursor: pointer;
+  }

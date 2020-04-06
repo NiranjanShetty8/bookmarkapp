@@ -155,7 +155,8 @@ export class BookmarkComponent implements OnInit {
       return
     }
     for (let bookmark of this.bookmarks) {
-      if (bookmark.name.indexOf(name) == -1) {
+      let actualName = bookmark.name.toLowerCase()
+      if (actualName.indexOf(name) == -1) {
         bookmark.display = false
       } else {
         bookmark.display = true

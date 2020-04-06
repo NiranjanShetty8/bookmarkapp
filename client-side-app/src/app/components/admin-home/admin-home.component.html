@@ -1,22 +1,51 @@
-<table id="displayTable">
-    <tr>
-        <th>Name</th>
-        <th>Password</th>
-        <th>Email</th>
-        <th>Edit</th>
-        <th>Delete</th>
-    </tr>
-    <tr *ngFor="let user of allUsers">
-        <td><a href="{{user.username}}/home" target="_blank"><strong>{{user.username}}</strong></a></td>
-        <td><strong>{{user.password}}</strong></td>
-        <td><strong>{{user.email}}</strong></td>
-        <td>
-            <input *ngIf="user.loginAttempts==0" id="unlockButton" type="button" value="Unlock" class="btn btn-warning"
-                (click)="unlockAccount(user)">
-        </td>
-        <td>
-            <input id="deleteButton" type="button" value="Delete" class="btn btn-danger" (click)="deleteUser(user.id)">
-        </td>
+<div class="container">
+    <div *ngIf="loading" class="backDrop">
+        <div class="spinner"></div>
+    </div>
+    <div *ngIf="!displaySingleUser">
+        <h1><strong>ALL USERS</strong> </h1>
+        <input type="text" id="mySearch" (keyup)="getSpecificUser($event)" placeholder="Search"
+            title="Type in a Username">
+        <table id="displayTable">
+            <tr>
+                <th>Name</th>
+                <th>Password</th>
+                <th>Email</th>
+                <th>Unlock</th>
+                <th>Delete</th>
+            </tr>
+            <tr *ngFor="let user of allUsers">
+                <td *ngIf="user.display"><input type="button" id="hyperLinkButton" value="{{user.username}}"
+                        (click)="getAllBookmarksOfUser(user)"></td>
+                <td *ngIf="user.display"><strong>{{user.password}}</strong></td>
+                <td *ngIf="user.display"><strong>{{user.email}}</strong></td>
+                <td *ngIf="user.display">
+                    <input [disabled]="!(user.loginAttempts==0)" id="unlockButton" type="button" value="Unlock"
+                        class="btn btn-warning" (click)="unlockAccount(user)">
+                </td>
+                <td *ngIf="user.display">
+                    <input id="deleteButton" type="button" value="Delete" class="btn btn-danger"
+                        (click)="deleteUser(user.id)">
+                </td>
 
-    </tr>
-</table>
+            </tr>
+        </table>
+    </div>
+    <div *ngIf="displaySingleUser">
+        <table id="displayTable">
+            <tr>
+                <th>Name</th>
+                <th>URL</th>
+                <th>Category Name</th>
+            </tr>
+            <tr *ngFor="let bookmark of allBookmarks">
+                <td *ngIf="bookmark.display"><strong>{{bookmark.name}}</strong></td>
+                <td *ngIf="bookmark.display"><a href={{bookmark.url}}
+                        target="_blank"><strong>{{bookmark.url}}</strong></a>
+                </td>
+                <td *ngIf="bookmark.display"><strong>{{bookmark.categoryName}}</strong></td>
+
+            </tr>
+        </table>
+    </div>
+</div>
