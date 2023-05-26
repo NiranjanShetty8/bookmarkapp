@@ -18,6 +18,7 @@ import (
 )
 
 func main() {
+	// adding comment from different account.
 	db, err := gorm.Open("mysql", "root:root@tcp(127.0.0.1:4040)/swabhav?charset=utf8&parseTime=True")
 	defer db.Close()
 	if err != nil {
